@@ -1,0 +1,36 @@
+{
+  "name": "home-server",
+  "version": "1.0.0",
+  "description": "Deploys my home server.",
+  "scripts": {
+    "deploy": "docker-compose run --rm deploy npm run local-deploy",
+    "deploy:infrastructure": "node ./src/infrastructure/deploy.js",
+    "local-deploy": "npm run deploy:infrastructure",
+    "test": "npm run test:lint",
+    "test:lint": "npx eslint ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/frasdav/home-server.git"
+  },
+  "author": "Fraser Davidson",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/frasdav/home-server/issues"
+  },
+  "homepage": "https://github.com/frasdav/home-server#readme",
+  "dependencies": {
+    "@cda0/terrajs": "^0.2.0",
+    "winston": "^3.2.1"
+  },
+  "devDependencies": {
+    "eslint": "^6.0.0",
+    "eslint-config-airbnb-base": "^14.1.0",
+    "eslint-plugin-import": "^2.20.2"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm test"
+    }
+  }
+}
