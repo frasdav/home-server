@@ -5,9 +5,9 @@ const path = require('path');
 const Terrajs = require('@cda0/terrajs');
 
 const {
-  vspherePassword,
-  vsphereServer,
-  vsphereUsername,
+  vcenterPassword,
+  vcenterServer,
+  vcenterUsername,
 } = require('../shared/constants');
 const logger = require('../shared/logger');
 
@@ -19,9 +19,9 @@ const deploy = async () => {
   await terraform.plan({
     out: 'terraform.tfplan',
     var: {
-      vspherePassword,
-      vsphereServer,
-      vsphereUsername,
+      vcenterPassword,
+      vcenterServer,
+      vcenterUsername,
     },
   });
 

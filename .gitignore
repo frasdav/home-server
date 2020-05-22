@@ -1,7 +1,9 @@
 .vscode/
 node_modules/
 .terraform/
+.govmomi/
 
 .env
+terraform.backup
 terraform.tfplan
 terraform.tfstate

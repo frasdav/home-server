@@ -1,14 +1,9 @@
 data "vsphere_datacenter" "dc" {
-  name = "ha-datacenter"
+  name = "Home"
 }
 
 data "vsphere_datastore" "datastore" {
   name          = "Local VMFS"
-  datacenter_id = "${data.vsphere_datacenter.dc.id}"
-}
-
-data "vsphere_resource_pool" "pool" {
-  name          = "cluster1/Resources"
   datacenter_id = "${data.vsphere_datacenter.dc.id}"
 }
 
