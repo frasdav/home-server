@@ -1,4 +1,8 @@
 const {
+  DOMAIN: domain,
+  NETWORK_CIDR: networkCidr,
+  NETWORK_DEFAULT_GATEWAY: networkDefaultGateway,
+  NETWORK_DNS_SERVERS: networkDnsServers,
   VCENTER_DATACENTER: vcenterDatacenter,
   VCENTER_DATASTORE: vcenterDatastore,
   VCENTER_NETWORK: vcenterNetwork,
@@ -18,13 +22,19 @@ const govcEnv = {
   GOVC_RESOURCE_POOL: vcenterResourcePool,
   GOVC_DATACENTER: vcenterDatacenter,
 };
+const kubeWorkerCount = 3;
 const ubuntuVersion = '20.04';
-const ubuntuTemplateVmName = `Ubuntu${ubuntuVersion.replace('.', '')}Template`;
+const ubuntuTemplateVmName = `Ubuntu ${ubuntuVersion}`;
 const ubuntuCloudImageOvaName = `ubuntu-${ubuntuVersion}-server-cloudimg-amd64.ova`;
 const ubuntuCloudImageOvaUrl = `https://cloud-images.ubuntu.com/releases/${ubuntuVersion}/release/${ubuntuCloudImageOvaName}`;
 
 module.exports = {
+  domain,
   govcEnv,
+  networkCidr,
+  networkDefaultGateway,
+  networkDnsServers,
+  kubeWorkerCount,
   ubuntuCloudImageOvaName,
   ubuntuCloudImageOvaUrl,
   ubuntuTemplateVmName,

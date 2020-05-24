@@ -1,19 +1,12 @@
-#!/usr/bin/env node
-
 const got = require('got');
 const path = require('path');
 const stream = require('stream');
 const { promisify } = require('util');
 
-const Shell = require('node-powershell');
-
 const {
   ubuntuCloudImageOvaName,
   ubuntuCloudImageOvaUrl,
   ubuntuTemplateVmName,
-  vcenterPassword,
-  vcenterServer,
-  vcenterUsername,
 } = require('../shared/constants');
 const {
   createWriteStream,
@@ -40,11 +33,11 @@ const deploy = async () => {
   }
 
   logger.info(`Checking for existing Vm with name '${ubuntuTemplateVmName}'`);
-  const templateVmInfoResponse = await govc(`vm.info -json ${ubuntuTemplateVmName}`);
+  const templateVmInfoResponse = await govc(`vm.info -json "${ubuntuTemplateVmName}"`);
   const templateVmInfo = JSON.parse(templateVmInfoResponse);
   if (templateVmInfo.VirtualMachines && templateVmInfo.VirtualMachines.length > 0) {
-    logger.info(`Existing Vm with name '${ubuntuTemplateVmName}' found; deleting`);
-    await govc(`vm.destroy ${ubuntuTemplateVmName}`);
+    logger.info(`Existing Vm with name '${ubuntuTemplateVmName}' found`);
+    return;
   }
 
   const cloudInitData = await readFile(path.join(__dirname, 'cloud-config.yml'));
@@ -64,52 +57,20 @@ const deploy = async () => {
   logger.info(`Creating Vm with name '${ubuntuTemplateVmName}' using Ova ${ubuntuCloudImageOvaPath} and spec '${ubuntuCloudImageOvaSpecPath}'`);
   await govc(`import.ova -options=${ubuntuCloudImageOvaSpecPath} ${ubuntuCloudImageOvaPath}`);
 
-  logger.info(`Upgrading version for Vm with name '${ubuntuTemplateVmName}' to '15'`);
-  await govc(`vm.upgrade -vm ${ubuntuTemplateVmName} -version=15`);
+  // logger.info(`Upgrading version for Vm with name '${ubuntuTemplateVmName}' to '15'`);
+  // await govc(`vm.upgrade -vm ${ubuntuTemplateVmName} -version=15`);
 
   logger.info(`Updating settings for Vm with name '${ubuntuTemplateVmName}'`);
-  await govc(`vm.change -vm ${ubuntuTemplateVmName} -c 4 -m 4096 -e="disk.enableUUID=1"`);
-  await govc(`vm.disk.change -vm ${ubuntuTemplateVmName} -disk.label "Hard disk 1" -size 60G`);
+  await govc(`vm.change -vm "${ubuntuTemplateVmName}" -e="disk.enableUUID=1"`);
 
   logger.info(`Powering on Vm with name '${ubuntuTemplateVmName}'`);
-  await govc(`vm.power -on=true ${ubuntuTemplateVmName}`);
+  await govc(`vm.power -on=true "${ubuntuTemplateVmName}"`);
 
   logger.info(`Waiting for Vm with name '${ubuntuTemplateVmName}' to power off`);
   await waitForVmPoweredOff(ubuntuTemplateVmName);
 
   logger.info(`Marking Vm with name '${ubuntuTemplateVmName}' as template`);
-  await govc(`vm.markastemplate ${ubuntuTemplateVmName}`);
-
-  const ps = new Shell({
-    executionPolicy: 'Bypass',
-  });
-
-  logger.info(`Connecting to VCenter server at '${vcenterServer}'`);
-  ps.addCommand('Set-PowerCLIConfiguration -InvalidCertificateAction Ignore -Confirm:$false');
-  ps.addCommand(`Connect-VIServer ${vcenterServer} -User ${vcenterUsername} -Password ${vcenterPassword}`);
-  await ps.invoke();
-
-  const ubuntuOsCustomisationSpecName = 'Ubuntu';
-
-  ps.addCommand(`Get-OSCustomizationSpec ${ubuntuOsCustomisationSpecName} -ErrorAction SilentlyContinue | ConvertTo-Json`);
-  const ubuntuOsCustomisationSpec = await ps.invoke();
-  if (ubuntuOsCustomisationSpec) {
-    logger.info(`Existing Os customisation spec with name '${ubuntuOsCustomisationSpecName}' found; deleting`);
-    ps.addCommand(`Remove-OSCustomizationSpec ${ubuntuOsCustomisationSpecName} -Confirm:$false`);
-  }
-
-  logger.info(`Creating Os customisation spec with name '${ubuntuOsCustomisationSpecName}'`);
-  ps.addCommand('New-OSCustomizationSpec -Name Ubuntu -OSType Linux -DnsServer 192.168.225.251,192.168.225.1 -DnsSuffix fdavidson.net -Domain fdavidson.net -NamingScheme vm');
-  await ps.invoke();
-
-  logger.info(`Disconnecting from VCenter server at '${vcenterServer}'`);
-  ps.addCommand(`Disconnect-VIServer -Server ${vcenterServer} -Confirm:$false -Force`);
-  await ps.invoke();
+  await govc(`vm.markastemplate "${ubuntuTemplateVmName}"`);
 };
 
-deploy()
-  .then(() => process.exit())
-  .catch((err) => {
-    logger.error(err.message);
-    process.exit(1);
-  });
+module.exports = deploy;

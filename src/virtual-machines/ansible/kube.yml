@@ -1,0 +1,11 @@
+- name: Kube master
+  hosts:
+    - kube_master
+  roles:
+    - common
+
+- name: Kube workers
+  hosts:
+    - kube_workers
+  roles:
+    - common

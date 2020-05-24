@@ -3,10 +3,14 @@
   "version": "1.0.0",
   "description": "Deploys my home server.",
   "scripts": {
-    "deploy": "npm run deploy:virtual-machine-template && npm run deploy:virtual-machines",
-    "deploy:virtual-machine-template": "node ./src/virtual-machine-template/deploy.js",
-    "deploy:virtual-machines": "node ./src/virtual-machines/deploy.js",
+    "deploy": "node ./src/deploy.js",
+    "deploy:virtual-machine-template": "node -e 'require(\"./src/virtual-machine-template\").deploy()'",
+    "deploy:virtual-machines": "node -e 'require(\"./src/virtual-machines\").deploy()'",
+    "destroy": "node ./src/destroy.js",
+    "destroy:virtual-machine-template": "node -e 'require(\"./src/virtual-machine-template\").destroy()'",
+    "destroy:virtual-machines": "node -e 'require(\"./src/virtual-machines\").destroy()'",
     "ci-deploy": "docker-compose run --rm deploy npm run deploy",
+    "ci-destroy": "docker-compose run --rm deploy npm run deploy",
     "test": "npm run test:lint",
     "test:lint": "npx eslint ."
   },
@@ -23,7 +27,7 @@
   "dependencies": {
     "@cda0/terrajs": "^0.2.0",
     "got": "^11.1.4",
-    "node-powershell": "^4.0.0",
+    "node-ansible": "^0.5.5",
     "shelljs": "^0.8.4",
     "winston": "^3.2.1"
   },

@@ -1,13 +1,23 @@
-data "vsphere_datacenter" "dc" {
+data "vsphere_datacenter" "main" {
   name = "Home"
 }
 
-data "vsphere_datastore" "datastore" {
+data "vsphere_datastore" "main" {
   name          = "Local VMFS"
-  datacenter_id = "${data.vsphere_datacenter.dc.id}"
+  datacenter_id = "${data.vsphere_datacenter.main.id}"
 }
 
-data "vsphere_network" "network" {
+data "vsphere_resource_pool" "main" {
+  name          = "Dev"
+  datacenter_id = "${data.vsphere_datacenter.main.id}"
+}
+
+data "vsphere_network" "main" {
   name          = "VM Network"
-  datacenter_id = "${data.vsphere_datacenter.dc.id}"
+  datacenter_id = "${data.vsphere_datacenter.main.id}"
+}
+
+data "vsphere_virtual_machine" "ubuntu" {
+  name          = "Ubuntu 20.04"
+  datacenter_id = "${data.vsphere_datacenter.main.id}"
 }

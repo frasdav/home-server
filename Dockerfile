@@ -1,7 +1,9 @@
 FROM node:11.14.0 AS node
 FROM hashicorp/terraform:0.12.15 as terraform
 FROM vmware/govc:v0.18 as govc
-FROM centos:7
+FROM centos/python-36-centos7:20200514-897c8e3
+
+USER root
 
 # Install Node
 COPY --from=node /usr/local/bin/node /usr/local/bin/node
@@ -15,10 +17,12 @@ COPY --from=terraform /bin/terraform /usr/local/bin/terraform
 # Install govc
 COPY --from=govc /govc /usr/local/bin/govc
 
-# Install pwsh
-RUN curl https://packages.microsoft.com/config/rhel/7/prod.repo | tee /etc/yum.repos.d/microsoft.repo && \
-  yum install -y powershell
+# Upgrade pip
+RUN pip install --upgrade pip===20.1.1
 
-# Install PowerCLI
-RUN pwsh -Command Install-Module -Name VMware.PowerCLI -Scope CurrentUser -Force && \
-  pwsh -Command Set-PowerCLIConfiguration -Scope User -ParticipateInCEIP \$false -Confirm:\$false
+# Install Ansible
+RUN pip install ansible===2.9.9
+
+USER default
+
+ENTRYPOINT ["/bin/bash"]
