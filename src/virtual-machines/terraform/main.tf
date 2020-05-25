@@ -14,7 +14,7 @@ provider "local" {
 
 resource "vsphere_virtual_machine" "kube_master" {
   name             = "kube-master"
-  resource_pool_id = data.vsphere_resource_pool.main.id
+  resource_pool_id = data.vsphere_resource_pool.kubernetes.id
   datastore_id     = data.vsphere_datastore.main.id
 
   guest_id = "ubuntu64Guest"
@@ -66,7 +66,7 @@ resource "vsphere_virtual_machine" "kube_master" {
 
 resource "vsphere_virtual_machine" "kube_worker" {
   name             = "kube-worker0${count.index + 1}"
-  resource_pool_id = data.vsphere_resource_pool.main.id
+  resource_pool_id = data.vsphere_resource_pool.kubernetes.id
   datastore_id     = data.vsphere_datastore.main.id
 
   guest_id = "ubuntu64Guest"

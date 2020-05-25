@@ -4,8 +4,7 @@ const Terrajs = require('@cda0/terrajs');
 
 const {
   domain,
-  kubernetesMasterCount,
-  kubernetesWorkerCount,
+  kubeWorkerCount,
   networkCidr,
   networkDefaultGateway,
   networkDnsServers,
@@ -26,8 +25,7 @@ const destroy = async () => {
     autoApprove: true,
     var: {
       domain,
-      kubernetesMasterCount,
-      kubernetesWorkerCount,
+      kubeWorkerCount,
       networkCidr,
       networkDefaultGateway,
       // networkDnsServers,

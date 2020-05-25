@@ -1,0 +1,14 @@
+- name: Install Docker
+  apt:
+    name:
+      - containerd.io={{ containerd_io_version }}
+      - docker-ce={{ docker_ce_version }}
+      - docker-ce-cli={{ docker_ce_version }}
+    state: present
+  become: yes
+
+- name: Add ubuntu user to docker group
+  user:
+    name: ubuntu
+    group: docker
+  become: yes

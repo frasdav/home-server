@@ -7,8 +7,8 @@ data "vsphere_datastore" "main" {
   datacenter_id = "${data.vsphere_datacenter.main.id}"
 }
 
-data "vsphere_resource_pool" "main" {
-  name          = "Dev"
+data "vsphere_resource_pool" "kubernetes" {
+  name          = "Kubernetes"
   datacenter_id = "${data.vsphere_datacenter.main.id}"
 }
 

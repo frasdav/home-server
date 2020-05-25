@@ -1,11 +1,19 @@
+- name: Kube cluster
+  hosts:
+    - kube_cluster
+  roles:
+    - common
+    - kubeadm
+
 - name: Kube master
   hosts:
     - kube_master
   roles:
-    - common
+    - kube-master
 
 - name: Kube workers
   hosts:
     - kube_workers
   roles:
-    - common
+    - kube-worker
+  serial: "{{ 0 if ansible_check_mode else 1 }}"

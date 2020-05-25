@@ -1,0 +1,8 @@
+- name: Install kubeadm, kubelet and kubectl
+  apt:
+    name:
+      - kubeadm={{ kubeadm_version }}
+      - kubelet={{ kubeadm_version }}
+      - kubectl={{ kubeadm_version }}
+    state: present
+  become: yes

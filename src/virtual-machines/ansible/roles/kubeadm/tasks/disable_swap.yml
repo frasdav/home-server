@@ -1,0 +1,7 @@
+- name: Disable swap
+  replace:
+    path: /etc/fstab
+    regexp: '^([^#].*?\sswap\s+sw\s+.*)$'
+    replace: '# \1'
+  notify: Reboot
+  become: yes

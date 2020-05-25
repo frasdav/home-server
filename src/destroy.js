@@ -6,8 +6,8 @@ const virtualMachineTemplate = require('./virtual-machine-template');
 const virtualMachines = require('./virtual-machines');
 
 const destroy = async () => {
-  await virtualMachineTemplate.destroy();
   await virtualMachines.destroy();
+  await virtualMachineTemplate.destroy();
 };
 
 destroy()
