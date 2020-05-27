@@ -29,7 +29,8 @@
     "got": "^11.1.4",
     "node-ansible": "^0.5.5",
     "shelljs": "^0.8.4",
-    "winston": "^3.2.1"
+    "winston": "^3.2.1",
+    "yamljs": "^0.3.0"
   },
   "devDependencies": {
     "eslint": "^6.0.0",

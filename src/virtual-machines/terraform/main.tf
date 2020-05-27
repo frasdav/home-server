@@ -117,13 +117,3 @@ resource "vsphere_virtual_machine" "kube_worker" {
 
   count = var.kube_worker_count
 }
-
-resource "local_file" "ansible-inventory" {
-  content = templatefile("${path.module}/templates/hosts.ini.tpl",
-    {
-      kube_master  = vsphere_virtual_machine.kube_master
-      kube_workers = vsphere_virtual_machine.kube_worker.*
-    }
-  )
-  filename = "../ansible/hosts.ini"
-}
