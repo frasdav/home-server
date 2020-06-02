@@ -1,0 +1,28 @@
+- name: Get Ca file stats
+  stat:
+    path: /etc/kubernetes/pki/ca.key
+  register: kube_ca
+
+- name: Init cluster
+  shell: kubeadm init
+  register: init_cluster
+  when: not kube_ca.stat.exists
+  become: yes
+
+- name: Create .kube directory
+  file:
+    path: $HOME/.kube
+    mode: 0755
+    state: directory
+  register: kube_dir
+  when: init_cluster.changed
+
+- name: Copy config
+  copy:
+    src: /etc/kubernetes/admin.conf
+    dest: "{{ kube_dir.path }}/config"
+    remote_src: yes
+    owner: "{{ kube_dir.owner }}"
+    group: "{{ kube_dir.group }}"
+  when: init_cluster.changed
+  become: yes

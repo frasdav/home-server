@@ -1,0 +1,5 @@
+- name: Disable cloud-init
+  copy:
+    content: ""
+    dest: /etc/cloud/cloud-init.disabled
+  become: yes

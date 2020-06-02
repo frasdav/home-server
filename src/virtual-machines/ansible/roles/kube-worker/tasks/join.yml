@@ -1,0 +1,34 @@
+- name: Get kubelet conf stats
+  stat:
+    path: /etc/kubernetes/kubelet.conf
+  register: kubelet_conf
+
+- name: Gather kube_master facts
+  setup:
+  delegate_to: "{{ item }}"
+  delegate_facts: yes
+  when: not kubelet_conf.stat.exists
+  with_items: "{{ groups['kube_master'] }}"
+
+- name: Get kubeadm token
+  shell: kubeadm token create
+  register: kubeadm_token
+  delegate_to: kube-master
+  delegate_facts: yes
+  when: not kubelet_conf.stat.exists
+
+- name: Get kubeadm discovery token Ca cert hash
+  shell: |
+    openssl x509 -in /etc/kubernetes/pki/ca.crt -pubkey -noout |
+    openssl pkey -pubin -outform DER |
+    openssl dgst -sha256
+  register: discover_cert_ca_cert_hash
+  changed_when: no
+  delegate_to: kube-master
+  delegate_facts: yes
+  when: not kubelet_conf.stat.exists
+
+- name: Join cluster
+  shell: "kubeadm join {{ hostvars['kube-master']['ansible_ens192']['ipv4']['address'] }}:6443 --token {{ kubeadm_token.stdout }} --discovery-token-ca-cert-hash sha256:{{ discover_cert_ca_cert_hash.stdout | regex_replace('\\(stdin\\)= (\\w+)', '\\1') }}"
+  when: not kubelet_conf.stat.exists
+  become: yes

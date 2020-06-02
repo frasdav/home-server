@@ -1,0 +1,45 @@
+{
+  "name": "home-server",
+  "version": "1.0.0",
+  "description": "Deploys my home server.",
+  "scripts": {
+    "deploy": "node ./src/deploy.js",
+    "deploy:virtual-machine-template": "node -e 'require(\"./src/virtual-machine-template\").deploy()'",
+    "deploy:virtual-machines": "node -e 'require(\"./src/virtual-machines\").deploy()'",
+    "destroy": "node ./src/destroy.js",
+    "destroy:virtual-machine-template": "node -e 'require(\"./src/virtual-machine-template\").destroy()'",
+    "destroy:virtual-machines": "node -e 'require(\"./src/virtual-machines\").destroy()'",
+    "ci-deploy": "docker-compose run --rm deploy npm run deploy",
+    "ci-destroy": "docker-compose run --rm deploy npm run deploy",
+    "test": "npm run test:lint",
+    "test:lint": "npx eslint ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/frasdav/home-server.git"
+  },
+  "author": "Fraser Davidson",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/frasdav/home-server/issues"
+  },
+  "homepage": "https://github.com/frasdav/home-server#readme",
+  "dependencies": {
+    "@cda0/terrajs": "^0.2.0",
+    "got": "^11.1.4",
+    "node-ansible": "^0.5.5",
+    "shelljs": "^0.8.4",
+    "winston": "^3.2.1",
+    "yamljs": "^0.3.0"
+  },
+  "devDependencies": {
+    "eslint": "^6.0.0",
+    "eslint-config-airbnb-base": "^14.1.0",
+    "eslint-plugin-import": "^2.20.2"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm test"
+    }
+  }
+}
