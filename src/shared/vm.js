@@ -3,10 +3,10 @@ const govc = require('./govc');
 const govcVmInfoInterval = 5000;
 const waitForVmInfoTimeout = 18000000;
 
-const waitForVmPoweredOff = (vmName) => {
+const waitForVmPoweredOff = (vmName, config) => {
   const start = Date.now();
   function retryWaitForVmPoweredOff(resolve, reject) {
-    govc(`vm.info -json "${vmName}"`)
+    govc(`vm.info -json "${vmName}"`, config)
       .then((vmInfoResponse) => {
         const vmInfo = JSON.parse(vmInfoResponse);
         if (vmInfo.VirtualMachines[0].Runtime.PowerState === 'poweredOff') {

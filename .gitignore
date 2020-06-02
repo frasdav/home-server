@@ -4,6 +4,10 @@ node_modules/
 .govmomi/
 
 .env
+*.ova
+*.ova.json
 terraform.backup
 terraform.tfplan
 terraform.tfstate
+.terraform.tfstate.lock.info
+hosts.yml

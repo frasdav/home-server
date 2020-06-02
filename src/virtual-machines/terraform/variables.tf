@@ -16,10 +16,6 @@ variable "network_default_gateway" {
 
 variable "network_dns_servers" {
   type = list(string)
-  default = [
-    "192.168.225.251",
-    "192.168.225.1"
-  ]
 }
 
 variable "vcenter_password" {

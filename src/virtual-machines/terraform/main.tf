@@ -55,8 +55,6 @@ resource "vsphere_virtual_machine" "kube_master" {
     }
   }
 
-  wait_for_guest_net_timeout = -1
-
   lifecycle {
     ignore_changes = [
       vapp
@@ -98,7 +96,7 @@ resource "vsphere_virtual_machine" "kube_worker" {
       }
 
       network_interface {
-        ipv4_address = cidrhost(var.network_cidr, 30 + count.index)
+        ipv4_address = cidrhost(var.network_cidr, 21 + count.index)
         ipv4_netmask = split("/", var.network_cidr)[1]
       }
 
@@ -106,8 +104,6 @@ resource "vsphere_virtual_machine" "kube_worker" {
       dns_server_list = var.network_dns_servers
     }
   }
-
-  wait_for_guest_net_timeout = -1
 
   lifecycle {
     ignore_changes = [
