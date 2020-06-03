@@ -3,7 +3,7 @@
 const { getConfig } = require('./shared/config');
 const logger = require('./shared/logger');
 
-const virtualMachineTemplate = require('./virtual-machine-template');
+const virtualMachineTemplates = require('./virtual-machine-templates');
 const virtualMachines = require('./virtual-machines');
 
 const {
@@ -13,7 +13,7 @@ const {
 const destroy = async () => {
   const config = await getConfig(configFilePath);
   await virtualMachines.destroy(config);
-  await virtualMachineTemplate.destroy(config);
+  await virtualMachineTemplates.destroy(config);
 };
 
 destroy()

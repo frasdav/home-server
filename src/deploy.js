@@ -3,7 +3,7 @@
 const { getConfig } = require('./shared/config');
 const logger = require('./shared/logger');
 
-const virtualMachineTemplate = require('./virtual-machine-template');
+const virtualMachineTemplates = require('./virtual-machine-templates');
 const virtualMachines = require('./virtual-machines');
 
 const {
@@ -12,7 +12,7 @@ const {
 
 const deploy = async () => {
   const config = await getConfig(configFilePath);
-  await virtualMachineTemplate.deploy(config);
+  await virtualMachineTemplates.deploy(config);
   await virtualMachines.deploy(config);
 };
 
