@@ -22,7 +22,7 @@ const deploy = async () => {
   logger.info('Initialising Terraform');
   await terraform.init();
 
-  logger.info('Planning infrastructure changes');
+  logger.info('Planning changes');
   await terraform.plan({
     out: 'terraform.tfplan',
     var: {
@@ -40,15 +40,17 @@ const deploy = async () => {
     },
   });
 
-  logger.info('Applying infrastructure changes');
+  logger.info('Applying changes');
   await terraform.apply({
     plan: 'terraform.tfplan',
   });
 
+  logger.info('Getting output');
   const output = JSON.parse(await terraform.output({
     json: true,
   }));
 
+  logger.info('Generating Ansible inventory');
   const emptyAnsibleInventoryData = await readFile(path.join(__dirname, 'ansible', 'hosts.empty.yml'));
   const ansibleInventory = YAML.parse(emptyAnsibleInventoryData.toString());
   ansibleInventory.all.children.kube_master.hosts = {};

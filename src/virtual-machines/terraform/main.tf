@@ -8,10 +8,6 @@ provider "vsphere" {
   version = "~> 1.18"
 }
 
-provider "local" {
-  version = "~>1.4"
-}
-
 resource "vsphere_resource_pool" "kubernetes" {
   name                    = "Kubernetes"
   parent_resource_pool_id = data.vsphere_host.main.resource_pool_id

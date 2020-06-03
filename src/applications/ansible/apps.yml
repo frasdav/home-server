@@ -1,0 +1,5 @@
+- name: Apps
+  hosts:
+    - all
+  roles:
+    - ingress-controller

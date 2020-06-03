@@ -1,0 +1,10 @@
+- name: Download manifest
+  get_url:
+    url: "https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-{{ ingress_controller_version }}/deploy/static/provider/cloud/deploy.yaml"
+    dest: /tmp/deploy.yml
+  register: manifest
+
+- name: Apply manifest
+  k8s:
+    src: "{{ manifest.dest }}"
+    state: present

@@ -4,9 +4,11 @@
   "description": "Deploys my home server.",
   "scripts": {
     "deploy": "node ./src/deploy.js",
+    "deploy:applications": "node -e 'require(\"./src/applications\").deploy()'",
     "deploy:virtual-machine-templates": "node -e 'require(\"./src/virtual-machine-templates\").deploy()'",
     "deploy:virtual-machines": "node -e 'require(\"./src/virtual-machines\").deploy()'",
     "destroy": "node ./src/destroy.js",
+    "destroy:applications": "node -e 'require(\"./src/applications\").destroy()'",
     "destroy:virtual-machine-templates": "node -e 'require(\"./src/virtual-machine-templates\").destroy()'",
     "destroy:virtual-machines": "node -e 'require(\"./src/virtual-machines\").destroy()'",
     "ci-deploy": "docker-compose run --rm deploy npm run deploy",
