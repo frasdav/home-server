@@ -9,7 +9,7 @@ users:
     shell: /bin/bash
 package_upgrade: true
 packages:
-  - net-tools
+  - python3-pip
 runcmd:
   - 'echo "disable_vmware_customization: false" >> /etc/cloud/cloud.cfg'
   - echo -n > /etc/machine-id

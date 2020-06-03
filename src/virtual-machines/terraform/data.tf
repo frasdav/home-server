@@ -1,19 +1,19 @@
 data "vsphere_datacenter" "main" {
-  name = "Home"
+  name = "${var.vcenter_datacenter}"
 }
 
 data "vsphere_datastore" "main" {
-  name          = "Local VMFS"
-  datacenter_id = "${data.vsphere_datacenter.main.id}"
-}
-
-data "vsphere_resource_pool" "kubernetes" {
-  name          = "Kubernetes"
+  name          = "${var.vcenter_datastore}"
   datacenter_id = "${data.vsphere_datacenter.main.id}"
 }
 
 data "vsphere_network" "main" {
-  name          = "VM Network"
+  name          = "${var.vcenter_network}"
+  datacenter_id = "${data.vsphere_datacenter.main.id}"
+}
+
+data "vsphere_host" "main" {
+  name          = "esx01.${var.domain}"
   datacenter_id = "${data.vsphere_datacenter.main.id}"
 }
 

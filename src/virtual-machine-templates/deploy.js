@@ -3,11 +3,7 @@ const path = require('path');
 const stream = require('stream');
 const { promisify } = require('util');
 
-const {
-  ubuntuCloudImageOvaName,
-  ubuntuCloudImageOvaUrl,
-  ubuntuTemplateVmName,
-} = require('../shared/constants');
+const { getConfig } = require('../shared/config');
 const {
   createWriteStream,
   exists,
@@ -18,9 +14,18 @@ const govc = require('../shared/govc');
 const logger = require('../shared/logger');
 const { waitForVmPoweredOff } = require('../shared/vm');
 
+const {
+  configFilePath,
+  ubuntuCloudImageOvaName,
+  ubuntuCloudImageOvaUrl,
+  ubuntuTemplateVmName,
+} = require('../shared/constants');
+
 const pipeline = promisify(stream.pipeline);
 
-const deploy = async (config) => {
+const deploy = async () => {
+  const config = await getConfig(configFilePath);
+
   const ubuntuCloudImageOvaPath = path.join(__dirname, ubuntuCloudImageOvaName);
 
   logger.info(`Checking for Ova at path '${ubuntuCloudImageOvaPath}'`);

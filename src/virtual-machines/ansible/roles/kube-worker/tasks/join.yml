@@ -3,12 +3,18 @@
     path: /etc/kubernetes/kubelet.conf
   register: kubelet_conf
 
-- name: Gather kube_master facts
-  setup:
-  delegate_to: "{{ item }}"
-  delegate_facts: yes
+- name: Get kubeadm discovery data
+  shell: "kubectl -n kube-public get configmap cluster-info -o jsonpath='{.data.kubeconfig}'"
+  delegate_to: kube-master
+  register: kubectl_discovery_data
   when: not kubelet_conf.stat.exists
-  with_items: "{{ groups['kube_master'] }}"
+
+- name: Create discovery.yml file
+  copy:
+    content: "{{ kubectl_discovery_data.stdout }}"
+    dest: /etc/kubernetes/discovery.yml
+  when: not kubelet_conf.stat.exists
+  become: yes
 
 - name: Get kubeadm token
   shell: kubeadm token create
@@ -17,18 +23,26 @@
   delegate_facts: yes
   when: not kubelet_conf.stat.exists
 
-- name: Get kubeadm discovery token Ca cert hash
-  shell: |
-    openssl x509 -in /etc/kubernetes/pki/ca.crt -pubkey -noout |
-    openssl pkey -pubin -outform DER |
-    openssl dgst -sha256
-  register: discover_cert_ca_cert_hash
-  changed_when: no
-  delegate_to: kube-master
+- name: Create join.yml file
+  template:
+    src: "{{ role_path }}/templates/etc/kubernetes/join.yml.j2"
+    dest: /etc/kubernetes/join.yml
+    mode: 0644
+    owner: root
+    group: root
+  vars:
+    token: "{{ kubeadm_token.stdout }}"
+  when: not kubelet_conf.stat.exists
+  become: yes
+
+- name: Gather kube_master facts
+  setup:
+  delegate_to: "{{ item }}"
   delegate_facts: yes
   when: not kubelet_conf.stat.exists
+  with_items: "{{ groups['kube_master'] }}"
 
 - name: Join cluster
-  shell: "kubeadm join {{ hostvars['kube-master']['ansible_ens192']['ipv4']['address'] }}:6443 --token {{ kubeadm_token.stdout }} --discovery-token-ca-cert-hash sha256:{{ discover_cert_ca_cert_hash.stdout | regex_replace('\\(stdin\\)= (\\w+)', '\\1') }}"
+  shell: "kubeadm join --config /etc/kubernetes/join.yml"
   when: not kubelet_conf.stat.exists
   become: yes

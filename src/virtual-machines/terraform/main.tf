@@ -12,9 +12,20 @@ provider "local" {
   version = "~>1.4"
 }
 
+resource "vsphere_resource_pool" "kubernetes" {
+  name                    = "Kubernetes"
+  parent_resource_pool_id = data.vsphere_host.main.resource_pool_id
+}
+
+resource "vsphere_folder" "kubernetes" {
+  path          = "Kubernetes"
+  type          = "datastore"
+  datacenter_id = data.vsphere_datacenter.main.id
+}
+
 resource "vsphere_virtual_machine" "kube_master" {
   name             = "kube-master"
-  resource_pool_id = data.vsphere_resource_pool.kubernetes.id
+  resource_pool_id = vsphere_resource_pool.kubernetes.id
   datastore_id     = data.vsphere_datastore.main.id
 
   guest_id = "ubuntu64Guest"
@@ -64,7 +75,7 @@ resource "vsphere_virtual_machine" "kube_master" {
 
 resource "vsphere_virtual_machine" "kube_worker" {
   name             = "kube-worker0${count.index + 1}"
-  resource_pool_id = data.vsphere_resource_pool.kubernetes.id
+  resource_pool_id = vsphere_resource_pool.kubernetes.id
   datastore_id     = data.vsphere_datastore.main.id
 
   guest_id = "ubuntu64Guest"

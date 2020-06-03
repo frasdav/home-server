@@ -1,0 +1,5 @@
+- name: Install
+  pip:
+    name: "openshift=={{ python_openshift_version }}"
+    state: present
+  become: yes

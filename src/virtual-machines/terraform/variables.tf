@@ -18,6 +18,18 @@ variable "network_dns_servers" {
   type = list(string)
 }
 
+variable "vcenter_datacenter" {
+  type = string
+}
+
+variable "vcenter_datastore" {
+  type = string
+}
+
+variable "vcenter_network" {
+  type = string
+}
+
 variable "vcenter_password" {
   type = string
 }

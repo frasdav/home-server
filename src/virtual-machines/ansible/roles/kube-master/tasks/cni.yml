@@ -1,9 +1,10 @@
-- name: Get Kubernetes base64 version
-  shell: kubectl version | base64 | tr -d '\n'
-  register: kube_base64_version
-  changed_when: no
-  when: init_cluster.changed
+- name: Download Flannel manifest
+  get_url:
+    url: https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+    dest: /tmp/kube-flannel.yml
+  register: flannel_manifest
 
-- name: Install Weave Net
-  shell: kubectl apply -f "https://cloud.weave.works/k8s/net?k8s-version={{ kube_base64_version.stdout }}"
-  when: init_cluster.changed
+- name: Apply Flannel manifest
+  k8s:
+    src: "{{ flannel_manifest.dest }}"
+    state: present

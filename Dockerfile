@@ -27,6 +27,9 @@ RUN pip install --upgrade pip===20.1.1
 # Install Ansible
 RUN pip install ansible===2.9.9
 
+# Install openshift
+RUN pip install openshift===0.11.1
+
 USER default
 
 ENTRYPOINT ["/bin/bash"]

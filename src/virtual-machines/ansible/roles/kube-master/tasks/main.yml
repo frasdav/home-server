@@ -1,5 +1,9 @@
+- import_tasks: config.yml
+
 - import_tasks: init.yml
 
 - import_tasks: cni.yml
 
 - import_tasks: metal.yml
+
+- import_tasks: vsphere.yml
