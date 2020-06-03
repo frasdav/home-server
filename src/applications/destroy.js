@@ -9,16 +9,16 @@ const {
   configFilePath,
 } = require('../shared/constants');
 
-const deploy = async () => {
+const destroy = async () => {
   const config = await getConfig(configFilePath);
 
   await buildInventory(config);
 
   const playbook = await getPlaybook();
 
-  logger.info('Executing Ansible playbook with tag \'deploy\'');
-  playbook.tags('deploy');
+  logger.info('Executing Ansible playbook with tag \'destroy\'');
+  playbook.tags('destroy');
   await playbook.exec({ cwd: `${__dirname}/ansible` });
 };
 
-module.exports = deploy;
+module.exports = destroy;

@@ -1,1 +1,22 @@
-- import_tasks: install.yml
+- name: Download manifest
+  get_url:
+    url: "https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-{{ ingress_controller_version }}/deploy/static/provider/cloud/deploy.yaml"
+    dest: /tmp/deploy.yml
+  register: manifest
+  tags:
+    - deploy
+    - destroy
+
+- name: Apply manifest
+  k8s:
+    src: "{{ manifest.dest }}"
+    state: present
+  tags:
+    - deploy
+
+- name: Delete manifest
+  k8s:
+    src: "{{ manifest.dest }}"
+    state: absent
+  tags:
+    - destroy

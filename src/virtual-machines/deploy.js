@@ -22,7 +22,7 @@ const deploy = async () => {
   logger.info('Initialising Terraform');
   await terraform.init();
 
-  logger.info('Planning changes');
+  logger.info('Planning Terraform changes');
   await terraform.plan({
     out: 'terraform.tfplan',
     var: {
@@ -40,12 +40,12 @@ const deploy = async () => {
     },
   });
 
-  logger.info('Applying changes');
+  logger.info('Applying Terraform changes');
   await terraform.apply({
     plan: 'terraform.tfplan',
   });
 
-  logger.info('Getting output');
+  logger.info('Getting Terraform output');
   const output = JSON.parse(await terraform.output({
     json: true,
   }));
@@ -65,7 +65,7 @@ const deploy = async () => {
   });
   await writeFile(path.join(__dirname, 'ansible', 'hosts.yml'), YAML.stringify(ansibleInventory, 6, 2));
 
-  logger.info('Executing Ansible');
+  logger.info('Executing Ansible playbook');
   const playbook = new Ansible.Playbook().playbook('site').inventory('hosts.yml').user('ubuntu');
   playbook.variables({
     vcenter_datacenter: config.vcenter_datacenter,
