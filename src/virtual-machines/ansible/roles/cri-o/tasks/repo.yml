@@ -1,0 +1,12 @@
+- name: Add openSUSE Apt key
+  apt_key:
+    url: https://download.opensuse.org/repositories/devel:kubic:libcontainers:stable/x{{ ansible_lsb.id }}_{{ ansible_lsb.release }}/Release.key
+    state: present
+  become: yes
+
+- name: Add openSUSE repository
+  apt_repository:
+    repo: deb http://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/x{{ ansible_lsb.id }}_{{ ansible_lsb.release }}/ /
+    filename: libcontainers
+    state: present
+  become: yes

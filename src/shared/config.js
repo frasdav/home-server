@@ -1,4 +1,4 @@
-const YAML = require('yamljs');
+const YAML = require('yaml');
 const { exec } = require('./shell');
 
 const getConfig = async (configFilePath) => {

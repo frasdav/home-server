@@ -1,0 +1,9 @@
+- name: Get repos
+  shell: helm repo list
+  changed_when: no
+  failed_when: no
+  register: repo_list
+
+- name: Add stable repo
+  shell: helm repo add stable https://kubernetes-charts.storage.googleapis.com
+  when: repo_list.stdout.find('stable') == -1

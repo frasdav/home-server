@@ -1,7 +1,7 @@
 const Ansible = require('node-ansible');
 const path = require('path');
 const Terrajs = require('@cda0/terrajs');
-const YAML = require('yamljs');
+const YAML = require('yaml');
 
 const { getConfig } = require('../shared/config');
 const {
@@ -63,11 +63,7 @@ const deploy = async () => {
       ansible_host: h.default_ip_address,
     };
   });
-  await writeFile(path.join(__dirname, 'ansible', 'hosts.yml'), YAML.stringify(ansibleInventory, 6, 2));
-
-  logger.info('Executing Ansible playbook');
-  const playbook = new Ansible.Playbook().playbook('site').inventory('hosts.yml').user('ubuntu');
-  playbook.variables({
+  ansibleInventory.all.vars = {
     vcenter_datacenter: config.vcenter_datacenter,
     vcenter_datastore: config.vcenter_datastore,
     vcenter_network: config.vcenter_network,
@@ -75,7 +71,11 @@ const deploy = async () => {
     vcenter_server: config.vcenter_server,
     vcenter_storage_policy: config.vcenter_storage_policy,
     vcenter_username: config.vcenter_username,
-  });
+  };
+  await writeFile(path.join(__dirname, 'ansible', 'hosts.yml'), YAML.stringify(ansibleInventory));
+
+  logger.info('Executing Ansible playbook');
+  const playbook = new Ansible.Playbook().playbook('site').inventory('hosts.yml').user('ubuntu');
   playbook.on('stdout', (data) => { logger.info(data.toString()); });
   playbook.on('stderr', (data) => { logger.error(data.toString()); });
   await playbook.exec({ cwd: `${__dirname}/ansible` });

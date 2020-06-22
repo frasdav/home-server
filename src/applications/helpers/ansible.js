@@ -1,6 +1,6 @@
 const Ansible = require('node-ansible');
 const path = require('path');
-const YAML = require('yamljs');
+const YAML = require('yaml');
 
 const {
   readFile,
@@ -23,7 +23,7 @@ const buildInventory = async (config) => {
       ansible_host: kubeMasterVmIpAddress,
     },
   };
-  await writeFile(path.join(__dirname, '../ansible', 'hosts.yml'), YAML.stringify(ansibleInventory, 6, 2));
+  await writeFile(path.join(__dirname, '../ansible', 'hosts.yml'), YAML.stringify(ansibleInventory));
 };
 
 const getPlaybook = () => {

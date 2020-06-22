@@ -1,5 +1,3 @@
-- import_tasks: sysctl.yml
-
 - import_tasks: disable_swap.yml
 
 - import_tasks: repo.yml

@@ -32,7 +32,7 @@
     "node-ansible": "^0.5.5",
     "shelljs": "^0.8.4",
     "winston": "^3.2.1",
-    "yamljs": "^0.3.0"
+    "yaml": "^1.10.0"
   },
   "devDependencies": {
     "eslint": "^6.0.0",

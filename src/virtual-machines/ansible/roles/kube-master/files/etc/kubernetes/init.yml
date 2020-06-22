@@ -3,6 +3,7 @@ apiVersion: kubeadm.k8s.io/v1beta2
 kind: InitConfiguration
 nodeRegistration:
   kubeletExtraArgs:
+    cgroup-driver: systemd
     cloud-provider: vsphere
     cloud-config: /etc/kubernetes/vsphere.conf
 ---

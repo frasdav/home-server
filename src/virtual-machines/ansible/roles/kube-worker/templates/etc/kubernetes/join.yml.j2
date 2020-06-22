@@ -7,4 +7,5 @@ discovery:
   tlsBootstrapToken: {{ token }}
 nodeRegistration:
   kubeletExtraArgs:
+    cgroup-driver: systemd
     cloud-provider: vsphere

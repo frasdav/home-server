@@ -1,0 +1,28 @@
+- name: Create config directory
+  file:
+    path: /etc/crio/crio.conf.d
+    mode: 0755
+    owner: root
+    group: root
+    state: directory
+  become: yes
+
+- name: Copy 01-cgroup-manager.conf file
+  copy:
+    src: "{{ role_path }}/files/etc/crio/crio.conf.d/01-cgroup-manager.conf"
+    dest: /etc/crio/crio.conf.d/01-cgroup-manager.conf
+    mode: 0644
+    owner: root
+    group: root
+  notify: Reload service
+  become: yes
+
+- name: Remove network configs
+  file:
+    path: "/etc/cni/net.d/{{ item }}"
+    state: absent
+  # notify: Reload service
+  become: yes
+  with_items:
+    - 100-crio-bridge.conf
+    - 200-loopback.conf

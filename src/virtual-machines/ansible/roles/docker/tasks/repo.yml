@@ -7,5 +7,6 @@
 - name: Add Docker Apt repository
   apt_repository:
     repo: deb https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable
+    filename: docker
     state: present
   become: yes
