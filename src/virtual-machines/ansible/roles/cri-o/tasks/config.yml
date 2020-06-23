@@ -21,7 +21,6 @@
   file:
     path: "/etc/cni/net.d/{{ item }}"
     state: absent
-  # notify: Reload service
   become: yes
   with_items:
     - 100-crio-bridge.conf

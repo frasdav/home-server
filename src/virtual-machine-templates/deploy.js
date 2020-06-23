@@ -62,11 +62,17 @@ const deploy = async () => {
   logger.info(`Creating Vm with name '${ubuntuTemplateVmName}' using Ova ${ubuntuCloudImageOvaPath} and spec '${ubuntuCloudImageOvaSpecPath}'`);
   await govc(`import.ova -options=${ubuntuCloudImageOvaSpecPath} ${ubuntuCloudImageOvaPath}`, config);
 
-  // logger.info(`Upgrading version for Vm with name '${ubuntuTemplateVmName}' to '15'`);
-  // await govc(`vm.upgrade -vm ${ubuntuTemplateVmName} -version=15`, config);
+  logger.info(`Upgrading version for Vm with name '${ubuntuTemplateVmName}' to '15'`);
+  await govc(`vm.upgrade -vm "${ubuntuTemplateVmName}" -version=15`, config);
 
-  logger.info(`Updating settings for Vm with name '${ubuntuTemplateVmName}'`);
+  logger.info(`Enabling disk Uuid for Vm with name '${ubuntuTemplateVmName}'`);
   await govc(`vm.change -vm "${ubuntuTemplateVmName}" -e="disk.enableUUID=1"`, config);
+
+  logger.info(`Removing floppy device from Vm with name '${ubuntuTemplateVmName}'`);
+  await govc(`device.remove -vm "${ubuntuTemplateVmName}" floppy-8000`, config);
+
+  logger.info(`Adding serial device to Vm with name '${ubuntuTemplateVmName}'`);
+  await govc(`device.serial.add -vm "${ubuntuTemplateVmName}"`, config);
 
   logger.info(`Powering on Vm with name '${ubuntuTemplateVmName}'`);
   await govc(`vm.power -on=true "${ubuntuTemplateVmName}"`, config);

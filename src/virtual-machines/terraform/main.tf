@@ -26,8 +26,9 @@ resource "vsphere_virtual_machine" "kube_master" {
 
   guest_id = "ubuntu64Guest"
 
-  num_cpus = 2
-  memory   = 4096
+  num_cpus         = 2
+  memory           = 4096
+  enable_disk_uuid = true
 
   network_interface {
     network_id = data.vsphere_network.main.id
@@ -76,8 +77,9 @@ resource "vsphere_virtual_machine" "kube_worker" {
 
   guest_id = "ubuntu64Guest"
 
-  num_cpus = 2
-  memory   = 4096
+  num_cpus         = 2
+  memory           = 4096
+  enable_disk_uuid = true
 
   network_interface {
     network_id = data.vsphere_network.main.id
