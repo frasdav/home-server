@@ -1,0 +1,9 @@
+- name: Install
+  apt:
+    name:
+      - bind9={{ bind_version }}
+      - bind9utils={{ bind_version }}
+      - bind9-doc={{ bind_version }}
+      - bind9-host={{ bind_version }}
+    state: present
+  become: yes

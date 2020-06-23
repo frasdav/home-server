@@ -8,6 +8,57 @@ provider "vsphere" {
   version = "~> 1.18"
 }
 
+resource "vsphere_virtual_machine" "dns" {
+  name             = "dns01"
+  resource_pool_id = data.vsphere_host.main.resource_pool_id
+  datastore_id     = data.vsphere_datastore.main.id
+
+  guest_id = "ubuntu64Guest"
+
+  num_cpus         = 1
+  memory           = 2096
+  enable_disk_uuid = true
+
+  network_interface {
+    network_id = data.vsphere_network.main.id
+  }
+
+  disk {
+    label            = "disk0"
+    size             = 10
+    thin_provisioned = false
+  }
+
+  cdrom {
+    client_device = true
+  }
+
+  clone {
+    template_uuid = data.vsphere_virtual_machine.ubuntu.id
+
+    customize {
+      linux_options {
+        host_name = "dns"
+        domain    = var.domain
+      }
+
+      network_interface {
+        ipv4_address = cidrhost(var.network_cidr, 11)
+        ipv4_netmask = split("/", var.network_cidr)[1]
+      }
+
+      ipv4_gateway    = var.network_default_gateway
+      dns_server_list = var.network_dns_servers
+    }
+  }
+
+  lifecycle {
+    ignore_changes = [
+      vapp
+    ]
+  }
+}
+
 resource "vsphere_resource_pool" "kubernetes" {
   name                    = "Kubernetes"
   parent_resource_pool_id = data.vsphere_host.main.resource_pool_id
@@ -20,7 +71,7 @@ resource "vsphere_folder" "kubernetes" {
 }
 
 resource "vsphere_virtual_machine" "kube_master" {
-  name             = "kube-master"
+  name             = "kube-master01"
   resource_pool_id = vsphere_resource_pool.kubernetes.id
   datastore_id     = data.vsphere_datastore.main.id
 
@@ -36,7 +87,7 @@ resource "vsphere_virtual_machine" "kube_master" {
 
   disk {
     label            = "disk0"
-    size             = 15
+    size             = 10
     thin_provisioned = false
   }
 
@@ -49,7 +100,7 @@ resource "vsphere_virtual_machine" "kube_master" {
 
     customize {
       linux_options {
-        host_name = "kube-master"
+        host_name = "kube-master01"
         domain    = var.domain
       }
 
@@ -87,7 +138,7 @@ resource "vsphere_virtual_machine" "kube_worker" {
 
   disk {
     label            = "disk0"
-    size             = 15
+    size             = 10
     thin_provisioned = false
   }
 

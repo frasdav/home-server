@@ -1,6 +1,7 @@
 - name: Kube cluster
   hosts:
-    - kube_cluster
+    - kube_master
+    - kube_workers
   roles:
     - common
     - kubeadm

@@ -5,7 +5,7 @@
 
 - name: Get kubeadm discovery data
   shell: "kubectl -n kube-public get configmap cluster-info -o jsonpath='{.data.kubeconfig}'"
-  delegate_to: kube-master
+  delegate_to: "{{ groups['kube_master'][0] }}"
   register: kubectl_discovery_data
   when: not kubelet_conf.stat.exists
 
@@ -19,7 +19,7 @@
 - name: Get kubeadm token
   shell: kubeadm token create
   register: kubeadm_token
-  delegate_to: kube-master
+  delegate_to: "{{ groups['kube_master'][0] }}"
   delegate_facts: yes
   when: not kubelet_conf.stat.exists
 

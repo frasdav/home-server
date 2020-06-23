@@ -3,7 +3,6 @@ kube_worker_count: ENC[AES256_GCM,data:8A==,iv:m376+3uH5lzyUfZyg4Y0WiOHa4gH/IbwW
 network_cidr: ENC[AES256_GCM,data:MSjyICNIXzVBihWA7s/ejg==,iv:sGBjNsHNk2md7G0r9EbFTlRU75CDUnUUBSEfpyC/0Ao=,tag:AdotkJi0gmkugak/I55drg==,type:str]
 network_default_gateway: ENC[AES256_GCM,data:Z9j2jICa5HTAzIfkvA==,iv:hG4kEQ6TE0f67zgjffH9Lquj51ioaw9cAyfKe7ex1JU=,tag:czs1ruYdjRwsSWtkmRVVbQ==,type:str]
 network_dns_servers:
-- ENC[AES256_GCM,data:lQLWW9OhnvfxJ4s2Z50v,iv:gfNHN5ZR7XS24sSfXYVBOrg+nqGSHUOi7Hz3wSNBnPs=,tag:oaydJYka1H/7rnuhgJWVJA==,type:str]
 - ENC[AES256_GCM,data:KataQ3frQbdnWZv4Jg==,iv:h5R5QZcqoeqFHSyffMLm1N7LFRap6bpFn9PIhk5+zh0=,tag:rp+fOaVfhjcdmBu19U47SQ==,type:str]
 vcenter_datacenter: ENC[AES256_GCM,data:pC92RQ==,iv:9NhYhplmEpjsjzfHEoWdLxWrdntja2QTYUQeGcFHb8g=,tag:dQeSGskHv3azVqgX3NePWw==,type:str]
 vcenter_datastore: ENC[AES256_GCM,data:3KyQMsjH+mXDzA==,iv:edj6hUiSRsTcIxNYEWWkjS6FfywMR5kd/8orVwGcfAY=,tag:/v/CHMgVDxd4IWZugOjTMw==,type:str]
@@ -16,8 +15,8 @@ sops:
     kms: []
     gcp_kms: []
     azure_kv: []
-    lastmodified: '2020-06-03T14:40:20Z'
-    mac: ENC[AES256_GCM,data:P/9ZhqO6521bkUSA5sz8yHb34BCC8eP3ewYg3G4QBQpyuJBZynCMpT7Q2XBJP6tZVYixDyoxjV9X0AX9Dew1+7a2UwkclquDzM8FDTAlPxqjjvzd0UJ9FPH62fKgAnOHNMXZrvP8JV2Sxsldsqdc0KEDNdUEtR/9Ih/X154SxcQ=,iv:bMrEh2cAWxz/KPzbnDNBmNN/1zJS4kVV3bjnPmb/Btw=,tag:agaGe1VZbFBXkQyooJyvEA==,type:str]
+    lastmodified: '2020-06-23T21:12:15Z'
+    mac: ENC[AES256_GCM,data:OoG5Rvaq1PwbySfYQigfdEDpvvLPt4ZSc+ay/jQU6qMr84Ki0/QwZK1oYQDjXZizEYQu3nGckHHNzCCdsAXveJGRhK9saSBnQgEW7nk5Z34xmKmDyI2uB6m9eXTn66Cy8VQpH8SBr7SivA+RnUbjV6JHgStWITyjsFcMuSRRGVw=,iv:u04wz14oPTTB++dUp90BK4vcfowNZTIK5SQQrxyOUgU=,tag:KXuLKF/bAuuwMdIdlH4x2w==,type:str]
     pgp:
     -   created_at: '2020-06-02T11:46:59Z'
         enc: |

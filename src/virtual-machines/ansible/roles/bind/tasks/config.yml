@@ -1,0 +1,48 @@
+- name: Copy zone files
+  copy:
+    src: "{{ role_path }}/files/etc/bind/{{ item }}"
+    dest: "/etc/bind/{{ item }}"
+    mode: 0644
+    owner: root
+    group: root
+  notify: Reload named
+  become: yes
+  with_items:
+    - db.192.168.225
+    - db.80.229.15.117
+    - db.external.dev.airhead.io
+    - db.external.fdavidson.net
+    - db.external.test.airhead.io
+    - db.internal.dev.airhead.io
+    - db.internal.fdavidson.net
+    - db.internal.test.airhead.io
+
+- name: Copy config files
+  copy:
+    src: "{{ role_path }}/files/etc/bind/{{ item }}"
+    dest: "/etc/bind/{{ item }}"
+    mode: 0644
+    owner: root
+    group: root
+  notify: Reload named
+  become: yes
+  with_items:
+    - named.conf.default-zones
+    - named.conf.local
+    - named.conf.options
+
+- name: Disable IPv6
+  lineinfile:
+    path: /etc/default/named
+    regexp: '^OPTIONS="-u bind"'
+    line: OPTIONS="-u bind -4"
+  notify: Reload named
+  become: yes
+
+- name: Set local resolver
+  lineinfile:
+    path: /etc/systemd/resolved.conf
+    regexp: "^#DNS="
+    line: DNS=127.0.0.1
+  notify: Reload systemd-resolved
+  become: yes

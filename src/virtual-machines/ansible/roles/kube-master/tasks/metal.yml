@@ -41,5 +41,5 @@
             - name: default
               protocol: layer2
               addresses:
-                - 192.168.225.40-192.168.225.49
+                - 192.168.225.24-192.168.225.29
     state: present

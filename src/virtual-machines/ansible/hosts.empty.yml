@@ -1,11 +1,9 @@
 all:
   children:
+    dns:
+      hosts:
     kube_master:
       hosts:
     kube_workers:
       hosts:
-    kube_cluster:
-      children:
-        kube_master:
-        kube_workers:
   vars:

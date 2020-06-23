@@ -10,8 +10,8 @@ const govc = require('../../shared/govc');
 const logger = require('../../shared/logger');
 
 const buildInventory = async (config) => {
-  logger.info('Getting kube-master Ip address');
-  const kubeMasterVmInfoResponse = await govc('vm.info -json "kube-master"', config);
+  logger.info('Getting kube-master01 Ip address');
+  const kubeMasterVmInfoResponse = await govc('vm.info -json "kube-master01"', config);
   const kubeMasterVmInfo = JSON.parse(kubeMasterVmInfoResponse);
   const kubeMasterVmIpAddress = kubeMasterVmInfo.VirtualMachines[0].Guest.IpAddress;
 

@@ -1,0 +1,31 @@
+;
+; BIND data file for external fdavidson.net
+;
+$TTL	86400
+@	IN	SOA	dns01.fdavidson.net. admin.fdavidson.net. (
+	1
+	43200
+	7200
+	2419200
+	86400
+)
+
+; NS records
+@				IN		NS		dns01.fdavidson.net.
+@				IN		NS		c.ns.buddyns.com.
+
+; A records
+@				3600	IN		A		80.229.15.117
+dns01			3600	IN		A		80.229.15.117
+
+; CNAME records
+autodiscover	3600	IN		CNAME	autodiscover.outlook.com.
+gateway			3600	IN		CNAME	fdavidson.net.
+msoid			3600	IN		CNAME	clientconfig.microsoftonline-p.net.
+
+; MX records
+@				3600	IN		MX		0		fdavidson-net.mail.protection.outlook.com.
+
+; TXT records
+@				3600	IN		TXT		"MS=ms71355713"
+@				3600	IN		TXT		"v=spf1 include:spf.protection.outlook.com -all"
