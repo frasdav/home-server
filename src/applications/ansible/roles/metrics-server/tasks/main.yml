@@ -9,8 +9,8 @@
 
 - name: Download manifest
   get_url:
-    url: "https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-{{ ingress_controller_version }}/deploy/static/provider/cloud/deploy.yaml"
-    dest: "/tmp/{{ directory.path }}/deploy.yml"
+    url: "https://github.com/kubernetes-sigs/metrics-server/releases/download/v{{ metrics_server_version }}/components.yaml"
+    dest: "{{ directory.path }}/components.yml"
   register: manifest
   tags:
     - deploy

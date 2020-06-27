@@ -1,5 +1,6 @@
 - name: Get repos
   shell: helm repo list
+  check_mode: no
   changed_when: no
   failed_when: no
   register: repo_list
