@@ -65,3 +65,12 @@
     state: absent
   tags:
     - destroy
+
+- name: Delete temp directory
+  file:
+    path: "{{ directory.path }}"
+    state: absent
+  register: directory
+  tags:
+    - deploy
+    - destroy

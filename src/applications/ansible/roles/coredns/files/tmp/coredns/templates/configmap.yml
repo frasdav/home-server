@@ -1,0 +1,99 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: coredns-internal-config
+data:
+  Corefile: |
+    .:53 {
+      acl {
+        allow net 192.168.225.0/24
+        block
+      }
+      loop
+      forward . tls://1.1.1.1 tls://1.0.0.1 {
+        tls_servername cloudflare-dns.com
+        health_check 5s
+      }
+      cache 30
+      prometheus :9153
+      log
+      errors
+      health
+      ready
+    }
+    {{- range $path, $data := .Files.Glob "zones/internal/**" }}
+    {{ trimPrefix "db." (index ($path | splitList "/") 2) }} {
+      file /etc/coredns/{{ index ($path | splitList "/") 2 }}
+    }
+    {{- end }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: coredns-internal-zones
+data:
+  {{- range $path, $data := .Files.Glob "zones/internal/**" }}
+  {{ index ($path | splitList "/") 2 }}: |-
+  {{- $data | toString | nindent 4 }}
+  {{ end }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: coredns-external-config
+data:
+  Corefile: |
+    .:53 {
+      prometheus :9153
+      log
+      errors
+      health
+      ready
+    }
+    {{- range $path, $data := .Files.Glob "zones/external/**" }}
+    {{ trimPrefix "db." (index ($path | splitList "/") 2) }} {
+      file /etc/coredns/{{ index ($path | splitList "/") 2 }} {
+        transfer to 108.61.224.67
+        transfer to 116.203.6.3
+        transfer to 107.191.99.111
+        transfer to 185.22.172.112
+        transfer to 103.6.87.125
+        transfer to 192.184.93.99
+        transfer to 119.252.20.56
+        transfer to 31.220.30.73
+        transfer to 185.34.136.178
+        transfer to 185.136.176.247
+        transfer to 45.77.29.133
+        transfer to 116.203.0.64
+        transfer to 167.88.161.228
+        transfer to 199.195.249.208
+        transfer to 104.244.78.122
+        transfer to 2001:19f0:6400:8642::3
+        transfer to 2a01:4f8:1c0c:8115::3
+        transfer to 2604:180:2:4cf::3
+        transfer to 2a00:1838:20:2::cd5e:68e9
+        transfer to 2403:2500:4000::f3e
+        transfer to 2604:180:1:92a::3
+        transfer to 2401:1400:1:1201::1:7853:1a5
+        transfer to 2a04:bdc7:100:1b::3
+        transfer to 2a00:dcc7:d3ff:88b2::1
+        transfer to 2a06:fdc0:fade:2f7::1
+        transfer to 2001:19f0:7001:381::3
+        transfer to 2a01:4f8:1c0c:8122::3
+        transfer to 2605:6400:20:d5e::3
+        transfer to 2605:6400:10:65::3
+        transfer to 2605:6400:30:fd6e::3
+      }
+    }
+    {{- end }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: coredns-external-zones
+data:
+  {{- range $path, $data := .Files.Glob "zones/external/**" }}
+  {{ index ($path | splitList "/") 2 }}: |-
+  {{- $data | toString | nindent 4 }}
+  {{ end }}

@@ -1,6 +1,0 @@
-- name: Bind
-  hosts:
-    - dns
-  roles:
-    - common
-    - bind

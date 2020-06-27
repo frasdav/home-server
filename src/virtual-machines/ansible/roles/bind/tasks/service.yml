@@ -1,6 +1,0 @@
-- name: Run service
-  systemd:
-    name: named
-    enabled: yes
-    state: started
-  become: yes

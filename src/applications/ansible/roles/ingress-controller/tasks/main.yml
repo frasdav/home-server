@@ -10,7 +10,7 @@
 - name: Download manifest
   get_url:
     url: "https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-{{ ingress_controller_version }}/deploy/static/provider/cloud/deploy.yaml"
-    dest: "/tmp/{{ directory.path }}/deploy.yml"
+    dest: "{{ directory.path }}/deploy.yml"
   register: manifest
   tags:
     - deploy
@@ -28,4 +28,13 @@
     src: "{{ manifest.dest }}"
     state: absent
   tags:
+    - destroy
+
+- name: Delete temp directory
+  file:
+    path: "{{ directory.path }}"
+    state: absent
+  register: directory
+  tags:
+    - deploy
     - destroy

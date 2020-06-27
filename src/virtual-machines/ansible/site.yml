@@ -1,3 +1,1 @@
-- import_playbook: bind.yml
-
 - import_playbook: kube.yml

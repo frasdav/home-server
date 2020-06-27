@@ -4,3 +4,4 @@
   roles:
     - ingress-controller
     - kubernetes-dashboard
+    - coredns
