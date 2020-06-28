@@ -27,7 +27,7 @@
   template:
     src: "{{ role_path }}/templates/etc/kubernetes/join.yml.j2"
     dest: /etc/kubernetes/join.yml
-    mode: 0644
+    mode: "0644"
     owner: root
     group: root
   vars:

@@ -1,7 +1,7 @@
 - name: Create config directory
   file:
     path: /etc/crio/crio.conf.d
-    mode: 0755
+    mode: "0755"
     owner: root
     group: root
     state: directory
@@ -11,7 +11,7 @@
   copy:
     src: "{{ role_path }}/files/etc/crio/crio.conf.d/01-cgroup-manager.conf"
     dest: /etc/crio/crio.conf.d/01-cgroup-manager.conf
-    mode: 0644
+    mode: "0644"
     owner: root
     group: root
   notify: Reload service

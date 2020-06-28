@@ -2,7 +2,7 @@
   template:
     src: "{{ role_path }}/templates/etc/kubernetes/vsphere.conf.j2"
     dest: /etc/kubernetes/vsphere.conf
-    mode: 0644
+    mode: "0644"
     owner: root
     group: root
   become: yes

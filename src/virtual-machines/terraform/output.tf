@@ -1,7 +1,3 @@
-output "dns" {
-  value = "${vsphere_virtual_machine.dns}"
-}
-
 output "kube_master" {
   value = "${vsphere_virtual_machine.kube_master}"
 }

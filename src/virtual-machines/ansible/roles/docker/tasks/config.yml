@@ -2,7 +2,7 @@
   copy:
     src: "{{ role_path }}/files/etc/docker/daemon.json"
     dest: /etc/docker/daemon.json
-    mode: 0644
+    mode: "0644"
     owner: root
     group: root
   notify: Reload service

@@ -1,7 +1,5 @@
 all:
   children:
-    dns:
-      hosts:
     kube_master:
       hosts:
     kube_workers:

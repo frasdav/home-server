@@ -24,6 +24,6 @@
     dest: /usr/local/bin
     owner: root
     group: root
-    mode: 0755
+    mode: "0755"
   when: binary.stat.exists == false
   become: yes

@@ -53,10 +53,6 @@ const deploy = async () => {
   logger.info('Generating Ansible inventory');
   const emptyAnsibleInventoryData = await readFile(path.join(__dirname, 'ansible', 'hosts.empty.yml'));
   const ansibleInventory = YAML.parse(emptyAnsibleInventoryData.toString());
-  ansibleInventory.all.children.dns.hosts = {};
-  ansibleInventory.all.children.dns.hosts[output.dns.value.name] = {
-    ansible_host: output.dns.value.default_ip_address,
-  };
   ansibleInventory.all.children.kube_master.hosts = {};
   ansibleInventory.all.children.kube_master.hosts[output.kube_master.value.name] = {
     ansible_host: output.kube_master.value.default_ip_address,

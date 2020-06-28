@@ -21,7 +21,7 @@
   copy:
     src: "{{ role_path }}/files/tmp/{{ role_name }}/"
     dest: "{{ directory.path }}"
-    directory_mode: 0755
+    directory_mode: "0755"
   tags:
     - deploy
     - destroy
