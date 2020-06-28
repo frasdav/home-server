@@ -5,3 +5,4 @@
     - ingress-controller
     - kubernetes-dashboard
     - coredns
+    - pi-hole

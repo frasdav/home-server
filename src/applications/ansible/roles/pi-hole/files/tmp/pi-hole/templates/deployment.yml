@@ -1,0 +1,96 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pi-hole
+  labels:
+    app.kubernetes.io/name: pi-hole
+    app.kubernetes.io/version: {{ .Chart.AppVersion }}
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: pi-hole
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: pi-hole
+        app.kubernetes.io/version: {{ .Chart.AppVersion }}
+      annotations:
+        checksum.config: {{ include (print $.Template.BasePath "/configmap.yml") . | sha256sum | trunc 63 }}
+    spec:
+      containers:
+        - name: cloudflared
+          image: crazymax/cloudflared:latest
+          imagePullPolicy: Always
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          resources:
+            limits:
+              memory: 128Mi
+          ports:
+            - containerPort: 5053
+              name: cloudflared-udp
+              protocol: UDP
+        - name: pi-hole
+          image: pihole/pihole:{{ .Chart.AppVersion }}
+          env:
+            - name: WEB_PORT
+              value: "80"
+            - name: VIRTUAL_HOST
+              value: pi-hole.apps.fdavidson.net
+            - name: WEBPASSWORD
+              value: password
+            - name: DNS1
+              value: "127.0.0.1#5053"
+          ports:
+            - containerPort: 53
+              name: dns-tcp
+              protocol: TCP
+            - containerPort: 53
+              name: dns-udp
+              protocol: UDP
+            - containerPort: 67
+              name: client-udp
+              protocol: UDP
+            - containerPort: 80
+              name: http
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /admin.index.php
+              port: http
+            initialDelaySeconds: 60
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 5
+          readinessProbe:
+            httpGet:
+              path: /admin.index.php
+              port: http
+            initialDelaySeconds: 10
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 5
+          volumeMounts:
+            - mountPath: /etc/pihole
+              name: config
+            - mountPath: /etc/dnsmasq.d/02-custom.conf
+              name: custom-dnsmasq
+              subPath: 02-custom.conf
+            - mountPath: /etc/addn-hosts
+              name: custom-dnsmasq
+              subPath: addn-hosts
+      dnsPolicy: None
+      dnsConfig:
+        nameservers:
+          - 127.0.0.1
+      volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: pi-hole-data
+        - name: custom-dnsmasq
+          configMap:
+            name: pi-hole-custom-dnsmasq

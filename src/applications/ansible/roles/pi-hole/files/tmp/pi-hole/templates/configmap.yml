@@ -1,0 +1,10 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: pi-hole-custom-dnsmasq
+data:
+  02-custom.conf: |
+    addn-hosts=/etc/addn-hosts
+  addn-hosts: |
+    ttest.com

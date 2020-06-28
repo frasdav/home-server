@@ -18,6 +18,8 @@ spec:
       labels:
         app.kubernetes.io/name: coredns-internal
         app.kubernetes.io/version: {{ .Chart.AppVersion }}
+      annotations:
+        checksum.config: {{ include (print $.Template.BasePath "/configmap.yml") . | sha256sum | trunc 63 }}
     spec:
       containers:
         - name: coredns-internal
@@ -49,12 +51,12 @@ spec:
             successThreshold: 1
             failureThreshold: 5
           volumeMounts:
-            - name: config
-              mountPath: /etc/coredns/Corefile
+            - mountPath: /etc/coredns/Corefile
+              name: config
               subPath: Corefile
             {{- range $path, $d := .Files.Glob "zones/internal/**" }}
-            - name: zones
-              mountPath: /etc/coredns/{{ index ($path | splitList "/") 2 }}
+            - mountPath: /etc/coredns/{{ index ($path | splitList "/") 2 }}
+              name: zones
               subPath: {{ index ($path | splitList "/") 2 }}
             {{- end }}
       volumes:
@@ -84,17 +86,19 @@ spec:
       labels:
         app.kubernetes.io/name: coredns-external
         app.kubernetes.io/version: {{ .Chart.AppVersion }}
+      annotations:
+        checksum.config: {{ include (print $.Template.BasePath "/configmap.yml") . | sha256sum | trunc 63 }}
     spec:
       containers:
         - name: coredns-external
           image: coredns/coredns:{{ .Chart.AppVersion }}
           args: [ "-conf", "/etc/coredns/Corefile" ]
           ports:
-            - name: dns-tcp
-              containerPort: 53
+            - containerPort: 53
+              name: dns-tcp
               protocol: TCP
-            - name: dns-udp
-              containerPort: 53
+            - containerPort: 53
+              name: dns-udp
               protocol: UDP
           livenessProbe:
             httpGet:
@@ -115,12 +119,12 @@ spec:
             successThreshold: 1
             failureThreshold: 5
           volumeMounts:
-            - name: config
-              mountPath: /etc/coredns/Corefile
+            - mountPath: /etc/coredns/Corefile
+              name: config
               subPath: Corefile
             {{- range $path, $d := .Files.Glob "zones/external/**" }}
-            - name: zones
-              mountPath: /etc/coredns/{{ index ($path | splitList "/") 2 }}
+            - mountPath: /etc/coredns/{{ index ($path | splitList "/") 2 }}
+              name: zones
               subPath: {{ index ($path | splitList "/") 2 }}
             {{- end }}
       volumes:

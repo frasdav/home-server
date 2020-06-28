@@ -1,0 +1,29 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pi-hole
+  labels:
+    app.kubernetes.io/name: pi-hole
+    app.kubernetes.io/version: {{ .Chart.AppVersion }}
+spec:
+  selector:
+    app.kubernetes.io/name: pi-hole
+  clusterIP: 10.98.225.1
+  ports:
+    - name: dns-tcp
+      port: 53
+      protocol: TCP
+      targetPort: dns-tcp
+    - name: dns-udp
+      port: 53
+      protocol: UDP
+      targetPort: dns-udp
+    - name: client-udp
+      port: 67
+      protocol: UDP
+      targetPort: client-udp
+    - name: http
+      port: 80
+      protocol: TCP
+      targetPort: http
