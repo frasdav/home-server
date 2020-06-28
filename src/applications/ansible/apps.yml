@@ -4,5 +4,6 @@
   roles:
     - ingress-controller
     - kubernetes-dashboard
-    - coredns
+    - coredns-internal
+    - coredns-external
     - pi-hole

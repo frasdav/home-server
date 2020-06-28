@@ -19,10 +19,6 @@ spec:
       port: 53
       protocol: UDP
       targetPort: dns-udp
-    - name: client-udp
-      port: 67
-      protocol: UDP
-      targetPort: client-udp
     - name: http
       port: 80
       protocol: TCP

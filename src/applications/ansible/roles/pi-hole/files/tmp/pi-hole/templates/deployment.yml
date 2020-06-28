@@ -18,8 +18,6 @@ spec:
       labels:
         app.kubernetes.io/name: pi-hole
         app.kubernetes.io/version: {{ .Chart.AppVersion }}
-      annotations:
-        checksum.config: {{ include (print $.Template.BasePath "/configmap.yml") . | sha256sum | trunc 63 }}
     spec:
       containers:
         - name: cloudflared
@@ -45,15 +43,14 @@ spec:
               value: password
             - name: DNS1
               value: "127.0.0.1#5053"
+            - name: DNS2
+              value: "127.0.0.1#5053"
           ports:
             - containerPort: 53
               name: dns-tcp
               protocol: TCP
             - containerPort: 53
               name: dns-udp
-              protocol: UDP
-            - containerPort: 67
-              name: client-udp
               protocol: UDP
             - containerPort: 80
               name: http
@@ -77,12 +74,6 @@ spec:
           volumeMounts:
             - mountPath: /etc/pihole
               name: config
-            - mountPath: /etc/dnsmasq.d/02-custom.conf
-              name: custom-dnsmasq
-              subPath: 02-custom.conf
-            - mountPath: /etc/addn-hosts
-              name: custom-dnsmasq
-              subPath: addn-hosts
       dnsPolicy: None
       dnsConfig:
         nameservers:
@@ -90,7 +81,4 @@ spec:
       volumes:
         - name: config
           persistentVolumeClaim:
-            claimName: pi-hole-data
-        - name: custom-dnsmasq
-          configMap:
-            name: pi-hole-custom-dnsmasq
+            claimName: pi-hole-config
