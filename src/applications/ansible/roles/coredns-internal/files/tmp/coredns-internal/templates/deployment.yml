@@ -54,7 +54,7 @@ spec:
             - mountPath: /etc/coredns/Corefile
               name: config
               subPath: Corefile
-            {{- range $path, $d := .Files.Glob "zones/**" }}
+            {{- range $path, $data := .Files.Glob "zones/**" }}
             - mountPath: /etc/coredns/{{ index ($path | splitList "/") 1 }}
               name: zones
               subPath: {{ index ($path | splitList "/") 1 }}
