@@ -12,7 +12,7 @@ const {
 } = require('../shared/fs');
 const govc = require('../shared/govc');
 const logger = require('../shared/logger');
-const { waitForVmPoweredOff } = require('../shared/vm');
+const { templateVmExists, waitForVmPoweredOff } = require('../shared/vm');
 
 const {
   configFilePath,
@@ -23,44 +23,42 @@ const {
 
 const pipeline = promisify(stream.pipeline);
 
-const deploy = async () => {
-  const config = await getConfig(configFilePath);
+const downloadOva = async (ovaName, ovaUrl) => {
+  const ovaPath = path.join(__dirname, ovaName);
 
-  const ubuntuCloudImageOvaPath = path.join(__dirname, ubuntuCloudImageOvaName);
-
-  logger.info(`Checking for Ova at path '${ubuntuCloudImageOvaPath}'`);
-  if (!(await exists(ubuntuCloudImageOvaPath))) {
-    logger.info(`Existing Ova not found; downloading Ova from '${ubuntuCloudImageOvaUrl}'`);
+  logger.info(`Checking for Ova with name'${ovaName}' at path '${ovaPath}'`);
+  if (!(await exists(ovaPath))) {
+    logger.info(`Existing Ova with name '${ovaName}' not found; downloading Ova from '${ovaUrl}'`);
     await pipeline(
-      got.stream(ubuntuCloudImageOvaUrl),
-      createWriteStream(ubuntuCloudImageOvaPath),
+      got.stream(ovaUrl),
+      createWriteStream(ovaPath),
     );
   }
 
-  logger.info(`Checking for existing Vm with name '${ubuntuTemplateVmName}'`);
-  const templateVmInfoResponse = await govc(`vm.info -json "${ubuntuTemplateVmName}"`, config);
-  const templateVmInfo = JSON.parse(templateVmInfoResponse);
-  if (templateVmInfo.VirtualMachines && templateVmInfo.VirtualMachines.length > 0) {
-    logger.info(`Existing Vm with name '${ubuntuTemplateVmName}' found`);
-    return;
-  }
+  return ovaPath;
+};
 
+const getTemplateSpec = async (ovaPath, config) => {
+  logger.info(`Exporting spec from Ova '${ovaPath}'`);
+  const ovaSpecResponse = await govc(`import.spec ${ovaPath}`, config);
+  return JSON.parse(ovaSpecResponse);
+};
+
+const deployUbuntu = async (ovaPath, config) => {
   const cloudInitData = await readFile(path.join(__dirname, 'cloud-config.yml'));
   const base64CloudInitData = cloudInitData.toString('base64');
 
-  logger.info(`Exporting spec from Ova '${ubuntuCloudImageOvaPath}'`);
-  const ubuntuCloudImageOvaSpecResponse = await govc(`import.spec ${ubuntuCloudImageOvaPath}`, config);
-  const ubuntuCloudImageOvaSpec = JSON.parse(ubuntuCloudImageOvaSpecResponse);
-  ubuntuCloudImageOvaSpec.Name = ubuntuTemplateVmName;
-  ubuntuCloudImageOvaSpec.PropertyMapping.find((p) => p.Key === 'hostname').Value = '';
-  ubuntuCloudImageOvaSpec.PropertyMapping.find((p) => p.Key === 'user-data').Value = base64CloudInitData;
-  ubuntuCloudImageOvaSpec.NetworkMapping.find((p) => p.Name === 'VM Network').Network = 'VM Network';
+  const ovaSpec = await getTemplateSpec(ovaPath, config);
+  ovaSpec.Name = ubuntuTemplateVmName;
+  ovaSpec.PropertyMapping.find((p) => p.Key === 'hostname').Value = '';
+  ovaSpec.PropertyMapping.find((p) => p.Key === 'user-data').Value = base64CloudInitData;
+  ovaSpec.NetworkMapping.find((p) => p.Name === 'VM Network').Network = 'VM Network';
 
-  const ubuntuCloudImageOvaSpecPath = `${ubuntuCloudImageOvaPath}.json`;
-  await writeFile(ubuntuCloudImageOvaSpecPath, JSON.stringify(ubuntuCloudImageOvaSpec, null, 2));
+  const ovaSpecPath = `${ovaPath}.json`;
+  await writeFile(ovaSpecPath, JSON.stringify(ovaSpec, null, 2));
 
-  logger.info(`Creating Vm with name '${ubuntuTemplateVmName}' using Ova ${ubuntuCloudImageOvaPath} and spec '${ubuntuCloudImageOvaSpecPath}'`);
-  await govc(`import.ova -options=${ubuntuCloudImageOvaSpecPath} ${ubuntuCloudImageOvaPath}`, config);
+  logger.info(`Creating Vm with name '${ubuntuTemplateVmName}' using Ova ${ovaPath} and spec '${ovaSpecPath}'`);
+  await govc(`import.ova -options=${ovaSpecPath} ${ovaPath}`, config);
 
   logger.info(`Upgrading version for Vm with name '${ubuntuTemplateVmName}' to '15'`);
   await govc(`vm.upgrade -vm "${ubuntuTemplateVmName}" -version=15`, config);
@@ -82,6 +80,17 @@ const deploy = async () => {
 
   logger.info(`Marking Vm with name '${ubuntuTemplateVmName}' as template`);
   await govc(`vm.markastemplate "${ubuntuTemplateVmName}"`, config);
+};
+
+const deploy = async () => {
+  const config = await getConfig(configFilePath);
+
+  logger.info(`Checking for existing Vm with name '${ubuntuTemplateVmName}'`);
+  if (!(await templateVmExists(ubuntuTemplateVmName, config))) {
+    logger.info(`Existing Vm with name '${ubuntuTemplateVmName}' not found`);
+    const ovaPath = await downloadOva(ubuntuCloudImageOvaName, ubuntuCloudImageOvaUrl);
+    await deployUbuntu(ovaPath, config);
+  }
 };
 
 module.exports = deploy;

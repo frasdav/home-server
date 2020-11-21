@@ -32,4 +32,6 @@ RUN pip install openshift===0.11.1
 
 USER default
 
+WORKDIR "/app"
+
 ENTRYPOINT ["/bin/bash"]

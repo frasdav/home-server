@@ -1,6 +1,7 @@
 const { getConfig } = require('../shared/config');
 const govc = require('../shared/govc');
 const logger = require('../shared/logger');
+const { templateVmExists } = require('../shared/vm');
 
 const {
   configFilePath,
@@ -11,9 +12,7 @@ const destroy = async () => {
   const config = await getConfig(configFilePath);
 
   logger.info(`Checking for Vm with name '${ubuntuTemplateVmName}'`);
-  const templateVmInfoResponse = await govc(`vm.info -json "${ubuntuTemplateVmName}"`, config);
-  const templateVmInfo = JSON.parse(templateVmInfoResponse);
-  if (templateVmInfo.VirtualMachines && templateVmInfo.VirtualMachines.length > 0) {
+  if (await templateVmExists(ubuntuTemplateVmName, config)) {
     logger.info(`Existing Vm with name '${ubuntuTemplateVmName}' found; deleting`);
     await govc(`vm.destroy "${ubuntuTemplateVmName}"`, config);
   }

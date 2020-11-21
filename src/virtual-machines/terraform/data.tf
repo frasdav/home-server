@@ -13,7 +13,7 @@ data "vsphere_network" "main" {
 }
 
 data "vsphere_host" "main" {
-  name          = "esx01.${var.domain}"
+  name          = "192.168.225.2"
   datacenter_id = "${data.vsphere_datacenter.main.id}"
 }
 

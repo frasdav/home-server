@@ -46,9 +46,14 @@ const deploy = async () => {
   });
 
   logger.info('Getting Terraform output');
-  const output = JSON.parse(await terraform.output({
-    json: true,
-  }));
+  const output = JSON.parse(await terraform.output(
+    {
+      json: true,
+    },
+    {
+      silent: true,
+    },
+  ));
 
   logger.info('Generating Ansible inventory');
   const emptyAnsibleInventoryData = await readFile(path.join(__dirname, 'ansible', 'hosts.empty.yml'));
