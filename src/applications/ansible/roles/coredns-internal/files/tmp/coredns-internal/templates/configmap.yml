@@ -11,7 +11,7 @@ data:
         block
       }
       loop
-      forward . 10.98.225.1
+      forward . 127.0.0.1:5053
       cache 30
       prometheus :9153
       log

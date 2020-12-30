@@ -59,6 +59,18 @@ spec:
               name: zones
               subPath: {{ index ($path | splitList "/") 1 }}
             {{- end }}
+        - name: cloudflared
+          image: crazymax/cloudflared:latest
+          imagePullPolicy: Always
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          resources:
+            limits:
+              memory: 128Mi
+          ports:
+            - containerPort: 5053
+              name: cloudflared-udp
+              protocol: UDP
       volumes:
         - name: config
           configMap:

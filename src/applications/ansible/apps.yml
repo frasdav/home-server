@@ -6,4 +6,4 @@
     - kubernetes-dashboard
     - coredns-internal
     - coredns-external
-    - pi-hole
+    - homebridge

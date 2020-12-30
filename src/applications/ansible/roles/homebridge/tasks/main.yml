@@ -1,0 +1,48 @@
+- name: Get chart status
+  shell: helm status {{ role_name }}
+  check_mode: no
+  changed_when: no
+  failed_when: no
+  register: status
+  tags:
+    - deploy
+    - destroy
+
+- name: Create temp directory
+  file:
+    path: "/tmp/{{ role_name }}"
+    state: directory
+  register: directory
+  tags:
+    - deploy
+    - destroy
+
+- name: Create chart files
+  template:
+    src: "{{ role_path }}/templates/tmp/{{ role_name }}/{{ item }}.j2"
+    dest: "{{ directory.path }}/{{ item }}"
+  tags:
+    - deploy
+    - destroy
+  with_items:
+    # - Chart.yaml
+    - values.yaml
+
+- name: Apply chart
+  shell: "helm {{ 'upgrade' if status.rc == 0 else 'install' }} {{ role_name }} -f /tmp/{{ role_name }}/values.yaml k8s-at-home/{{ role_name }}"
+  tags:
+    - deploy
+
+- name: Delete chart
+  shell: "helm uninstall {{ role_name }}"
+  tags:
+    - destroy
+
+- name: Delete temp directory
+  file:
+    path: "{{ directory.path }}"
+    state: absent
+  register: directory
+  tags:
+    - deploy
+    - destroy

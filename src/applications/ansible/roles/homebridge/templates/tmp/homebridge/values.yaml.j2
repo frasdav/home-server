@@ -1,0 +1,15 @@
+config:
+  enableUI: true
+  plugins:
+    - homebridge-evohome
+    - homebridge-ring
+    - homebridge-sonos
+hostNetwork: true
+image:
+  tag: 3.3.0
+ingress:
+  enabled: true
+  hosts:
+    - home.apps.fdavidson.net
+persistence:
+  size: 5Gi

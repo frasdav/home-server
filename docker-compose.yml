@@ -1,9 +1,9 @@
 version: "3"
 services:
   deploy:
-    build: .
+    build:
+      context: .
+      dockerfile: ./Containerfile
     volumes:
       - .:/app
-    working_dir: /app
-    env_file:
-      - ./.env
+    env_file: .env

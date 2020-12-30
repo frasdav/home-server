@@ -65,6 +65,7 @@ resource "vsphere_virtual_machine" "kube_master" {
 
   lifecycle {
     ignore_changes = [
+      disk,
       vapp
     ]
   }
@@ -116,6 +117,7 @@ resource "vsphere_virtual_machine" "kube_worker" {
 
   lifecycle {
     ignore_changes = [
+      disk,
       vapp
     ]
   }

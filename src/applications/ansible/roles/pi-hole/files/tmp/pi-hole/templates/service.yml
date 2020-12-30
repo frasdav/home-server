@@ -9,7 +9,6 @@ metadata:
 spec:
   selector:
     app.kubernetes.io/name: pi-hole
-  clusterIP: 10.98.225.1
   ports:
     - name: dns-tcp
       port: 53
