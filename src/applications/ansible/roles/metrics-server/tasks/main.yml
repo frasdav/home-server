@@ -23,6 +23,27 @@
   tags:
     - deploy
 
+- name: Patch deployment
+  k8s:
+    definition:
+      apiVersion: v1
+      kind: Deployment
+      metadata:
+        name: metrics-server
+        namespace: kube-system
+      spec:
+        template:
+          spec:
+            containers:
+              - name: metrics-server
+                args:
+                  - --cert-dir=/tmp
+                  - --secure-port=4443
+                  - --kubelet-insecure-tls
+                  - --kubelet-preferred-address-types=InternalIP
+  tags:
+    - deploy
+
 - name: Delete manifest
   k8s:
     src: "{{ manifest.dest }}"

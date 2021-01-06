@@ -37,6 +37,7 @@ const deploy = async () => {
       vcenter_password: config.vcenter_password,
       vcenter_server: config.vcenter_server,
       vcenter_username: config.vcenter_username,
+      vsphere_host: config.vsphere_host,
     },
   });
 

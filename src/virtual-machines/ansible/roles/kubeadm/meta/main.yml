@@ -1,2 +1,3 @@
 dependencies:
+  - disable-swap
   - cri-o

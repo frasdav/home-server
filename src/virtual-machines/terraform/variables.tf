@@ -41,3 +41,7 @@ variable "vcenter_server" {
 variable "vcenter_username" {
   type = string
 }
+
+variable "vsphere_host" {
+  type = string
+}

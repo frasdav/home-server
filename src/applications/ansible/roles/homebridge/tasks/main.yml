@@ -17,19 +17,16 @@
     - deploy
     - destroy
 
-- name: Create chart files
+- name: Create values file
   template:
-    src: "{{ role_path }}/templates/tmp/{{ role_name }}/{{ item }}.j2"
-    dest: "{{ directory.path }}/{{ item }}"
+    src: "{{ role_path }}/templates/tmp/{{ role_name }}/values.yaml.j2"
+    dest: "{{ directory.path }}/values.yaml"
   tags:
     - deploy
     - destroy
-  with_items:
-    # - Chart.yaml
-    - values.yaml
 
 - name: Apply chart
-  shell: "helm {{ 'upgrade' if status.rc == 0 else 'install' }} {{ role_name }} -f /tmp/{{ role_name }}/values.yaml k8s-at-home/{{ role_name }}"
+  shell: "helm {{ 'upgrade' if status.rc == 0 else 'install' }} {{ role_name }} -f /tmp/{{ role_name }}/values.yaml k8s-at-home/{{ role_name }} --version v{{ homebridge_version }}"
   tags:
     - deploy
 

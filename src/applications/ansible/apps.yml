@@ -3,7 +3,7 @@
     - all
   roles:
     - ingress-controller
-    - kubernetes-dashboard
+    - metrics-server
     - coredns-internal
     - coredns-external
     - homebridge

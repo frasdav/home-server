@@ -1,0 +1,3 @@
+- import_tasks: disable_swap.yml
+
+- meta: flush_handlers

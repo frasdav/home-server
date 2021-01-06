@@ -11,12 +11,14 @@ vcenter_password: ENC[AES256_GCM,data:sfUUZH9RQ+I3iG6Rtg==,iv:OKKAYz79WxWMPGqChD
 vcenter_server: ENC[AES256_GCM,data:sTRa2DWlmclv51mE4jlxypL0QeXUOTg=,iv:rIFLfnZomCITBUUmAKzSPg/P5KR8drm3R19Ikt8beGk=,tag:IDl5mDwUFNkLCF+yarHyig==,type:str]
 vcenter_storage_policy: ENC[AES256_GCM,data:akSqwjgosCN3qBAO/xTeqNkikOg=,iv:wVz1U4SiAqMhGpQtq/YH6paLJIB+rGgvtyfpffuM0uo=,tag:5ccUnWMBRFQsssj6qMW0Iw==,type:str]
 vcenter_username: ENC[AES256_GCM,data:pH/huPyMvh7/i9TJU0oGPhnv3qReDU55Q7kw,iv:JUt3scAA0Zt8cH+Ds97vT61rbzt0JwSEhNFojSoLebE=,tag:tnOFM94tBOImyjn4s4Vvpg==,type:str]
+vsphere_host: ENC[AES256_GCM,data:hj4hjY/+V7oKLw1uCQ==,iv:BDohblznAuWFxNaCHhfpCswOR3dD0pV2dhiwdJmFyG0=,tag:RdRDTp0r2zxADlbyeSFh3w==,type:str]
 sops:
     kms: []
     gcp_kms: []
     azure_kv: []
-    lastmodified: '2020-06-23T21:12:15Z'
-    mac: ENC[AES256_GCM,data:OoG5Rvaq1PwbySfYQigfdEDpvvLPt4ZSc+ay/jQU6qMr84Ki0/QwZK1oYQDjXZizEYQu3nGckHHNzCCdsAXveJGRhK9saSBnQgEW7nk5Z34xmKmDyI2uB6m9eXTn66Cy8VQpH8SBr7SivA+RnUbjV6JHgStWITyjsFcMuSRRGVw=,iv:u04wz14oPTTB++dUp90BK4vcfowNZTIK5SQQrxyOUgU=,tag:KXuLKF/bAuuwMdIdlH4x2w==,type:str]
+    hc_vault: []
+    lastmodified: '2021-01-05T11:38:19Z'
+    mac: ENC[AES256_GCM,data:Sv+PCgj7LUeHK6BpykqEaCGdkHERXypTVdWZy+kbmfomLGDVB0EuiEb2KjPZME3RW6TjEbdyvEKqnDECQ++jDEqGDdMTt2sDOPnONJ1029aF3AxRGyQG/qSjhhu4e5Nr7qI3IUUbtOZdIUytk7XRUIuWfiiOhtAWZdHX1Gm/epw=,iv:w4HGKM71NkyL01TLSGhgOFge8ymRxiN5RabsOL9E7Do=,tag:GKZlfbxdIsSWaDsjGsGA0A==,type:str]
     pgp:
     -   created_at: '2020-06-02T11:46:59Z'
         enc: |
@@ -34,4 +36,4 @@ sops:
             -----END PGP MESSAGE-----
         fp: 765CCA6474657CF206CAACCB19F606777E114C68
     unencrypted_suffix: _unencrypted
-    version: 3.5.0
+    version: 3.6.1
