@@ -7,3 +7,5 @@
 - import_tasks: metal.yml
 
 - import_tasks: vsphere.yml
+
+- import_tasks: istio.yml
