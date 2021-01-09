@@ -1,4 +1,3 @@
-metal_lb_version: 0.9.3
 vcenter_datacenter:
 vcenter_datastore:
 vcenter_network:

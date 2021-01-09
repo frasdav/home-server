@@ -1,2 +1,0 @@
-- name: Install istio
-  shell: istioctl install -y

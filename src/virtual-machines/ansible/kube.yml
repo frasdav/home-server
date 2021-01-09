@@ -1,10 +1,9 @@
-- name: Kube cluster
+- name: Common
   hosts:
     - kube_master
     - kube_workers
   roles:
     - common
-    - kubeadm
 
 - name: Kube master
   hosts:
@@ -18,3 +17,18 @@
   roles:
     - kube-worker
   serial: "{{ 0 if ansible_check_mode else 1 }}"
+
+- name: Infrastructure
+  hosts:
+    - kube_master
+  roles:
+    - vsphere-storage
+    - flannel
+    - metallb
+    - istio
+
+- name: Tools
+  hosts:
+    - kube_master
+  roles:
+    - helm

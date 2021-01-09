@@ -15,4 +15,3 @@ $TTL 86400
 
 ; PTR records
 10        IN        PTR        vcenter01.fdavidson.net.
-11        IN        PTR        dns01.fdavidson.net.

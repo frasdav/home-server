@@ -35,7 +35,7 @@
     - destroy
 
 - name: Apply chart
-  shell: "helm {{ 'upgrade' if status.rc == 0 else 'install' }} {{ role_name }} {{ directory.path }}"
+  shell: "helm {{ 'upgrade' if status.rc == 0 else 'install' }} {{ role_name }} {{ directory.path }} --repo https://kubernetes-charts.storage.googleapis.com"
   tags:
     - deploy
 

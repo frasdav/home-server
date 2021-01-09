@@ -26,7 +26,7 @@
     - destroy
 
 - name: Apply chart
-  shell: "helm {{ 'upgrade' if status.rc == 0 else 'install' }} {{ role_name }} -f /tmp/{{ role_name }}/values.yaml k8s-at-home/{{ role_name }} --version v{{ homebridge_version }}"
+  shell: "helm {{ 'upgrade' if status.rc == 0 else 'install' }} {{ role_name }} -f /tmp/{{ role_name }}/values.yaml {{ role_name }} --version v{{ homebridge_version }} --repo https://k8s-at-home.com/charts/"
   tags:
     - deploy
 

@@ -1,0 +1,31 @@
+- name: Install Istio
+  shell: istioctl install -y
+
+- name: Apply Istio gateway
+  k8s:
+    definition:
+      apiVersion: networking.istio.io/v1alpha3
+      kind: Gateway
+      metadata:
+        name: istio-ingress
+        namespace: default
+      spec:
+        selector:
+          app: istio-ingressgateway
+        servers:
+          - port:
+              number: 80
+              name: http
+              protocol: HTTP
+            hosts:
+              - "*"
+
+- name: Apply Istio injection label
+  k8s:
+    definition:
+      apiVersion: v1
+      kind: Namespace
+      metadata:
+        name: default
+        labels:
+          istio-injection: enabled

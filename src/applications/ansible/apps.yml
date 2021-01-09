@@ -2,8 +2,6 @@
   hosts:
     - all
   roles:
-    - ingress-controller
     - metrics-server
     - coredns-internal
     - coredns-external
-    - homebridge
