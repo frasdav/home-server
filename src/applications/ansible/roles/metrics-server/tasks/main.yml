@@ -19,6 +19,7 @@
 - name: Apply manifest
   k8s:
     src: "{{ manifest.dest }}"
+    wait: yes
     state: present
   tags:
     - deploy
@@ -41,6 +42,8 @@
                   - --secure-port=4443
                   - --kubelet-insecure-tls
                   - --kubelet-preferred-address-types=InternalIP
+    wait: yes
+    state: present
   tags:
     - deploy
 

@@ -19,6 +19,8 @@
               protocol: HTTP
             hosts:
               - "*"
+    wait: yes
+    state: present
 
 - name: Apply Istio injection label
   k8s:
@@ -29,3 +31,5 @@
         name: default
         labels:
           istio-injection: enabled
+    wait: yes
+    state: present

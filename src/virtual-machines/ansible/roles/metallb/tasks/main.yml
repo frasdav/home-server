@@ -1,19 +1,14 @@
-- name: Download Metal manifests
+- name: Download Metal namespace
   get_url:
-    url: "https://raw.githubusercontent.com/metallb/metallb/v{{ metal_lb_version }}/manifests/{{ item }}"
-    dest: "/tmp/{{ item }}"
-  register: flannel_manifest
-  with_items:
-    - namespace.yaml
-    - metallb.yaml
+    url: "https://raw.githubusercontent.com/metallb/metallb/v{{ metal_lb_version }}/manifests/namespace.yaml"
+    dest: /tmp/namespace.yaml
+  register: metallb_namespace
 
-- name: Apply Metal manifests
+- name: Apply Metal namespace
   k8s:
-    src: "/tmp/{{ item }}"
+    src: "{{ metallb_namespace.dest }}"
+    wait: yes
     state: present
-  with_items:
-    - namespace.yaml
-    - metallb.yaml
 
 - name: Apply Metal secret
   k8s:
@@ -26,6 +21,8 @@
       type: Opaque
       data:
         secretkey: NDRnR2p0NU9manVwbDZYRlZDVDhTdTc2MkJ2dWVrVDlXalVtUUlDUGRlSzJxeVhPaHEwTHRBcFM1S1RqZWlqeApuMDdSQkZSc09iNE42TE9vNWh4RXJoM0pDNCtzN2xGRFQ2eThCNnk5L3NwOTE1dVZPdGk5WU5nUTR4eGlqOHVrCnROTTRmZDlJOUNBUFlkWGs0d2thRk8ycmtqeGNhZklUd1VjQWk5TmFQaFE9
+    wait: yes
+    state: present
 
 - name: Apply Metal config map
   k8s:
@@ -42,4 +39,17 @@
               protocol: layer2
               addresses:
                 - 192.168.225.24-192.168.225.29
+    wait: yes
+    state: present
+
+- name: Download Metal manifest
+  get_url:
+    url: "https://raw.githubusercontent.com/metallb/metallb/v{{ metal_lb_version }}/manifests/metallb.yaml"
+    dest: /tmp/metallb.yaml
+  register: metallb_manifest
+
+- name: Apply Metal manifest
+  k8s:
+    src: "{{ metallb_manifest.dest }}"
+    wait: yes
     state: present

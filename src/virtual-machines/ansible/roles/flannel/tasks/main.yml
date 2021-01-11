@@ -7,4 +7,5 @@
 - name: Apply Flannel manifest
   k8s:
     src: "{{ flannel_manifest.dest }}"
+    wait: yes
     state: present

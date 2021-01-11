@@ -16,7 +16,6 @@
     - kube_workers
   roles:
     - kube-worker
-  serial: "{{ 0 if ansible_check_mode else 1 }}"
 
 - name: Infrastructure
   hosts:

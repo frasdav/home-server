@@ -19,6 +19,7 @@
 - name: Apply manifest
   k8s:
     src: "{{ manifest.dest }}"
+    wait: yes
     state: present
   tags:
     - deploy
