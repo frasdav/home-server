@@ -9,7 +9,7 @@
 
 - name: Download manifest
   get_url:
-    url: "https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-{{ ingress_controller_version }}/deploy/static/provider/cloud/deploy.yaml"
+    url: "https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v{{ nginx_ingress_version }}/deploy/static/provider/cloud/deploy.yaml"
     dest: "{{ directory.path }}/deploy.yml"
   register: manifest
   tags:

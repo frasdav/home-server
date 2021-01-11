@@ -2,6 +2,8 @@
   hosts:
     - all
   roles:
+    - traefik-ingress
+    - kiali-operator
     - metrics-server
     - coredns-internal
     - coredns-external

@@ -1,0 +1,42 @@
+- name: Get chart status
+  shell: helm status {{ role_name }} --namespace {{ role_name }}
+  check_mode: no
+  changed_when: no
+  failed_when: no
+  register: status
+  tags:
+    - deploy
+    - destroy
+
+- name: Apply namespace
+  k8s:
+    definition:
+      apiVersion: v1
+      kind: Namespace
+      metadata:
+        name: "{{ role_name }}"
+    wait: yes
+    state: present
+  tags:
+    - deploy
+
+- name: Apply chart
+  shell: "helm {{ 'upgrade' if status.rc == 0 else 'install' }} {{ role_name }} traefik --namespace {{ role_name }} --version {{ traefik_version }} --repo https://containous.github.io/traefik-helm-chart"
+  tags:
+    - deploy
+
+- name: Delete chart
+  shell: "helm uninstall {{ role_name }} --namespace {{ role_name }}"
+  tags:
+    - destroy
+
+- name: Delete namespace
+  k8s:
+    definition:
+      apiVersion: v1
+      kind: Namespace
+      metadata:
+        name: "{{ role_name }}"
+    state: absent
+  tags:
+    - destroy

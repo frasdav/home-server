@@ -1,0 +1,68 @@
+- name: Get chart status
+  shell: helm status {{ role_name }} --namespace {{ role_name }}
+  check_mode: no
+  changed_when: no
+  failed_when: no
+  register: status
+  tags:
+    - deploy
+    - destroy
+
+- name: Create temp directory
+  file:
+    path: "/tmp/{{ role_name }}"
+    state: directory
+  register: directory
+  tags:
+    - deploy
+    - destroy
+
+- name: Create values file
+  template:
+    src: "{{ role_path }}/templates/tmp/{{ role_name }}/values.yaml.j2"
+    dest: "{{ directory.path }}/values.yaml"
+  tags:
+    - deploy
+    - destroy
+
+- name: Apply namespace
+  k8s:
+    definition:
+      apiVersion: v1
+      kind: Namespace
+      metadata:
+        name: "{{ role_name }}"
+    wait: yes
+    state: present
+  tags:
+    - deploy
+
+- name: Apply chart
+  shell: "helm {{ 'upgrade' if status.rc == 0 else 'install' }} {{ role_name }} -f /tmp/{{ role_name }}/values.yaml {{ role_name }} --namespace {{ role_name }} --version {{ kiali_version }} --repo https://kiali.org/helm-charts"
+  tags:
+    - deploy
+
+- name: Delete chart
+  shell: "helm uninstall {{ role_name }} --namespace {{ role_name }}"
+  tags:
+    - destroy
+
+- name: Delete namespace
+  k8s:
+    definition:
+      apiVersion: v1
+      kind: Namespace
+      metadata:
+        name: "{{ role_name }}"
+    state: absent
+  tags:
+    - destroy
+
+- name: Delete temp directory
+  file:
+    path: "{{ directory.path }}"
+    state: absent
+  register: directory
+  tags:
+    - deploy
+    - destroy
