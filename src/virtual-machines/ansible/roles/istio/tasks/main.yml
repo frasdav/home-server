@@ -1,5 +1,63 @@
+- name: Download archive
+  get_url:
+    url: "https://github.com/istio/istio/releases/download/{{ istio_version }}/istio-{{ istio_version }}-linux-amd64.tar.gz"
+    dest: "/tmp/istio-{{ istio_version }}-linux-amd64.tar.gz"
+  register: archive
+
+- name: Extract archive
+  unarchive:
+    src: "{{ archive.dest }}"
+    remote_src: yes
+    dest: /tmp
+
+- name: Get binary stats
+  stat:
+    path: /usr/local/bin/istioctl
+  register: binary
+
+- name: Copy binary
+  copy:
+    src: "/tmp/istio-{{ istio_version }}/bin/istioctl"
+    remote_src: yes
+    dest: /usr/local/bin
+    owner: root
+    group: root
+    mode: "0755"
+  when: binary.stat.exists == false
+  become: yes
+
 - name: Install Istio
   shell: istioctl install -y
+
+- name: Apply Kiali custom resource definition
+  k8s:
+    definition:
+      apiVersion: apiextensions.k8s.io/v1beta1
+      kind: CustomResourceDefinition
+      metadata:
+        name: monitoringdashboards.monitoring.kiali.io
+      spec:
+        group: monitoring.kiali.io
+        names:
+          kind: MonitoringDashboard
+          listKind: MonitoringDashboardList
+          plural: monitoringdashboards
+          singular: monitoringdashboard
+        scope: Namespaced
+        versions:
+        - name: v1alpha1
+          served: true
+          storage: true
+    wait: yes
+    state: present
+
+- name: Apply Istio addons
+  k8s:
+    src: "/tmp/istio-{{ istio_version }}/samples/addons/{{ item }}.yaml"
+    state: present
+  with_items:
+    - kiali
+    - prometheus
 
 - name: Apply Istio gateway
   k8s:
