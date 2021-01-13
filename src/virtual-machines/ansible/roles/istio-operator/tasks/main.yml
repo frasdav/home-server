@@ -1,0 +1,30 @@
+- name: Download archive
+  get_url:
+    url: "https://github.com/istio/istio/releases/download/{{ istio_version }}/istio-{{ istio_version }}-linux-amd64.tar.gz"
+    dest: "/tmp/istio-{{ istio_version }}-linux-amd64.tar.gz"
+  register: archive
+
+- name: Extract archive
+  unarchive:
+    src: "{{ archive.dest }}"
+    remote_src: yes
+    dest: /tmp
+
+- name: Get binary stats
+  stat:
+    path: /usr/local/bin/istioctl
+  register: binary
+
+- name: Copy binary
+  copy:
+    src: "/tmp/istio-{{ istio_version }}/bin/istioctl"
+    remote_src: yes
+    dest: /usr/local/bin
+    owner: root
+    group: root
+    mode: "0755"
+  when: binary.stat.exists == false
+  become: yes
+
+- name: Apply Istio operator
+  shell: istioctl operator init

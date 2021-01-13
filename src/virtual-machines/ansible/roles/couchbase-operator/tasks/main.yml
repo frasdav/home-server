@@ -1,0 +1,43 @@
+- name: Download archive
+  get_url:
+    url: "https://packages.couchbase.com/kubernetes/{{ couchbase_operator_version }}/couchbase-autonomous-operator-kubernetes_{{ couchbase_operator_version }}-linux-x86_64.tar.gz"
+    dest: "/tmp/couchbase-autonomous-operator-kubernetes_{{ couchbase_operator_version }}-linux-x86_64.tar.gz"
+  register: archive
+
+- name: Extract archive
+  unarchive:
+    src: "{{ archive.dest }}"
+    remote_src: yes
+    dest: /tmp
+
+- name: Get binary stats
+  stat:
+    path: /usr/local/bin/cbopcfg
+  register: binary
+
+- name: Copy binary
+  copy:
+    src: "/tmp/couchbase-autonomous-operator-kubernetes_{{ couchbase_operator_version }}-linux-x86_64/bin/cbopcfg"
+    remote_src: yes
+    dest: /usr/local/bin
+    owner: root
+    group: root
+    mode: "0755"
+  when: binary.stat.exists == false
+  become: yes
+
+- name: Apply namespace
+  k8s:
+    definition:
+      apiVersion: v1
+      kind: Namespace
+      metadata:
+        name: "{{ role_name }}"
+    wait: yes
+    state: present
+
+- name: Apply operator
+  shell: "cbopcfg generate operator --scope cluster --namespace {{ role_name }} | kubectl apply -f -"
+
+- name: Apply admission controller
+  shell: "cbopcfg generate admission --namespace {{ role_name }} | kubectl apply -f -"

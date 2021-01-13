@@ -24,7 +24,8 @@
     - vsphere-storage
     - flannel
     - metallb
-    - istio
+    - istio-operator
+    - couchbase-operator
 
 - name: Tools
   hosts:
