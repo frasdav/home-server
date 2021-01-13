@@ -1,24 +1,6 @@
-- name: Create temp directory
-  file:
-    path: "/tmp/{{ role_name }}"
-    state: directory
-  register: directory
-  tags:
-    - deploy
-    - destroy
-
-- name: Download manifest
-  get_url:
-    url: "https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v{{ nginx_ingress_version }}/deploy/static/provider/cloud/deploy.yaml"
-    dest: "{{ directory.path }}/deploy.yml"
-  register: manifest
-  tags:
-    - deploy
-    - destroy
-
 - name: Apply manifest
   k8s:
-    src: "{{ manifest.dest }}"
+    definition: "{{ lookup('url', 'https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v{{ nginx_ingress_version }}/deploy/static/provider/cloud/deploy.yaml', split_lines=False) | from_yaml_all }}"
     wait: yes
     state: present
   tags:
@@ -26,16 +8,7 @@
 
 - name: Delete manifest
   k8s:
-    src: "{{ manifest.dest }}"
+    definition: "{{ lookup('url', 'https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v{{ nginx_ingress_version }}/deploy/static/provider/cloud/deploy.yaml', split_lines=False) | from_yaml_all }}"
     state: absent
   tags:
-    - destroy
-
-- name: Delete temp directory
-  file:
-    path: "{{ directory.path }}"
-    state: absent
-  register: directory
-  tags:
-    - deploy
     - destroy

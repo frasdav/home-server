@@ -1,16 +1,10 @@
-- name: Download Metal namespace
-  get_url:
-    url: "https://raw.githubusercontent.com/metallb/metallb/v{{ metal_lb_version }}/manifests/namespace.yaml"
-    dest: /tmp/namespace.yaml
-  register: metallb_namespace
-
-- name: Apply Metal namespace
+- name: Apply namespace
   k8s:
-    src: "{{ metallb_namespace.dest }}"
+    definition: "{{ lookup('url', 'https://raw.githubusercontent.com/metallb/metallb/v{{ metal_lb_version }}/manifests/namespace.yaml', split_lines=False) | from_yaml_all }}"
     wait: yes
     state: present
 
-- name: Apply Metal secret
+- name: Apply secret
   k8s:
     definition:
       apiVersion: v1
@@ -24,7 +18,7 @@
     wait: yes
     state: present
 
-- name: Apply Metal config map
+- name: Apply config map
   k8s:
     definition:
       apiVersion: v1
@@ -42,14 +36,8 @@
     wait: yes
     state: present
 
-- name: Download Metal manifest
-  get_url:
-    url: "https://raw.githubusercontent.com/metallb/metallb/v{{ metal_lb_version }}/manifests/metallb.yaml"
-    dest: /tmp/metallb.yaml
-  register: metallb_manifest
-
-- name: Apply Metal manifest
+- name: Apply manifest
   k8s:
-    src: "{{ metallb_manifest.dest }}"
+    definition: "{{ lookup('url', 'https://raw.githubusercontent.com/metallb/metallb/v{{ metal_lb_version }}/manifests/metallb.yaml', split_lines=False) | from_yaml_all }}"
     wait: yes
     state: present

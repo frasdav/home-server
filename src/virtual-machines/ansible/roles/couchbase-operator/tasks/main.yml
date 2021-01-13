@@ -26,6 +26,12 @@
   when: binary.stat.exists == false
   become: yes
 
+- name: Apply custom resource definitions
+  k8s:
+    src: "/tmp/couchbase-autonomous-operator-kubernetes_{{ couchbase_operator_version }}-linux-x86_64/crd.yaml"
+    wait: yes
+    state: present
+
 - name: Apply namespace
   k8s:
     definition:
@@ -37,7 +43,7 @@
     state: present
 
 - name: Apply operator
-  shell: "cbopcfg generate operator --scope cluster --namespace {{ role_name }} | kubectl apply -f -"
+  shell: "cbopcfg generate operator --scope cluster --namespace {{ role_name }} | kubectl create -f -"
 
 - name: Apply admission controller
-  shell: "cbopcfg generate admission --namespace {{ role_name }} | kubectl apply -f -"
+  shell: "cbopcfg generate admission --namespace {{ role_name }} | kubectl create -f -"

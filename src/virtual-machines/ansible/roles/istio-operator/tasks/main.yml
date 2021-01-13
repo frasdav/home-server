@@ -26,5 +26,5 @@
   when: binary.stat.exists == false
   become: yes
 
-- name: Apply Istio operator
+- name: Apply operator
   shell: istioctl operator init

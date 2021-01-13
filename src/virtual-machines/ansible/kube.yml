@@ -26,6 +26,7 @@
     - metallb
     - istio-operator
     - couchbase-operator
+    - eck-operator
 
 - name: Tools
   hosts:

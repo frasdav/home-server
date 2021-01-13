@@ -1,4 +1,4 @@
-- name: Apply VSphere storage class
+- name: Apply storage class
   k8s:
     definition:
       apiVersion: storage.k8s.io/v1

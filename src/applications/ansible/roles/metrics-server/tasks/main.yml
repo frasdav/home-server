@@ -1,24 +1,24 @@
-- name: Create temp directory
-  file:
-    path: "/tmp/{{ role_name }}"
-    state: directory
-  register: directory
-  tags:
-    - deploy
-    - destroy
+# - name: Create temp directory
+#   file:
+#     path: "/tmp/{{ role_name }}"
+#     state: directory
+#   register: directory
+#   tags:
+#     - deploy
+#     - destroy
 
-- name: Download manifest
-  get_url:
-    url: "https://github.com/kubernetes-sigs/metrics-server/releases/download/v{{ metrics_server_version }}/components.yaml"
-    dest: "{{ directory.path }}/components.yml"
-  register: manifest
-  tags:
-    - deploy
-    - destroy
+# - name: Download manifest
+#   get_url:
+#     url: "https://github.com/kubernetes-sigs/metrics-server/releases/download/v{{ metrics_server_version }}/components.yaml"
+#     dest: "{{ directory.path }}/components.yml"
+#   register: manifest
+#   tags:
+#     - deploy
+#     - destroy
 
 - name: Apply manifest
   k8s:
-    src: "{{ manifest.dest }}"
+    definition: "{{ lookup('url', 'https://github.com/kubernetes-sigs/metrics-server/releases/download/v{{ metrics_server_version }}/components.yaml', split_lines=False) | from_yaml_all }}"
     wait: yes
     state: present
   tags:
@@ -49,7 +49,7 @@
 
 - name: Delete manifest
   k8s:
-    src: "{{ manifest.dest }}"
+    definition: "{{ lookup('url', 'https://github.com/kubernetes-sigs/metrics-server/releases/download/v{{ metrics_server_version }}/components.yaml', split_lines=False) | from_yaml_all }}"
     state: absent
   tags:
     - destroy

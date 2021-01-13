@@ -1,11 +1,5 @@
-- name: Download Flannel manifest
-  get_url:
-    url: https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
-    dest: /tmp/kube-flannel.yml
-  register: flannel_manifest
-
-- name: Apply Flannel manifest
+- name: Apply manifest
   k8s:
-    src: "{{ flannel_manifest.dest }}"
+    definition: "{{ lookup('url', 'https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml', split_lines=False) | from_yaml_all }}"
     wait: yes
     state: present
