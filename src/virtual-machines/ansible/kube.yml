@@ -24,6 +24,7 @@
     - vsphere-storage
     - flannel
     - metallb
+    - metrics-server
     - istio-operator
     - couchbase-operator
     - eck-operator

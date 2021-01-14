@@ -26,5 +26,42 @@
   when: binary.stat.exists == false
   become: yes
 
-- name: Apply operator
+- name: Apply namespace
+  k8s:
+    definition:
+      apiVersion: v1
+      kind: Namespace
+      metadata:
+        name: istio-system
+    wait: yes
+    state: present
+
+- name: Initialize operator
   shell: istioctl operator init
+
+- name: Apply operator
+  k8s:
+    definition:
+      apiVersion: install.istio.io/v1alpha1
+      kind: IstioOperator
+      metadata:
+        name: istio-control-plane
+        namespace: istio-system
+      spec:
+        profile: default
+        addonComponents:
+          grafana:
+            enabled: true
+          prometheus:
+            enabled: true
+          tracing:
+            enabled: true
+          kiali:
+            enabled: true
+        values:
+          kiali:
+            dashboard:
+              auth:
+                strategy: anonymous
+    wait: yes
+    state: present

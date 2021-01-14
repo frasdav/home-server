@@ -3,8 +3,6 @@
     definition: "{{ lookup('url', 'https://github.com/kubernetes-sigs/metrics-server/releases/download/v{{ metrics_server_version }}/components.yaml', split_lines=False) | from_yaml_all }}"
     wait: yes
     state: present
-  tags:
-    - deploy
 
 - name: Patch deployment
   k8s:
@@ -26,12 +24,3 @@
                   - --kubelet-preferred-address-types=InternalIP
     wait: yes
     state: present
-  tags:
-    - deploy
-
-- name: Delete manifest
-  k8s:
-    definition: "{{ lookup('url', 'https://github.com/kubernetes-sigs/metrics-server/releases/download/v{{ metrics_server_version }}/components.yaml', split_lines=False) | from_yaml_all }}"
-    state: absent
-  tags:
-    - destroy
