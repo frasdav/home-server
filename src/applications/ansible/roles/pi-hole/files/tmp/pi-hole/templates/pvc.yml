@@ -4,8 +4,8 @@ kind: PersistentVolumeClaim
 metadata:
   name: pi-hole-config
   labels:
-    app.kubernetes.io/name: pi-hole
-    app.kubernetes.io/version: {{ .Chart.AppVersion }}
+    app: {{ .Chart.Name }}
+    version: {{ .Chart.AppVersion }}
   annotations:
     volume.beta.kubernetes.io/storage-class: vsphere
 spec:

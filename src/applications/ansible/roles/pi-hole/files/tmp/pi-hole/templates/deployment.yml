@@ -4,20 +4,20 @@ kind: Deployment
 metadata:
   name: pi-hole
   labels:
-    app.kubernetes.io/name: pi-hole
-    app.kubernetes.io/version: {{ .Chart.AppVersion }}
+    app: {{ .Chart.Name }}
+    version: {{ .Chart.AppVersion }}
 spec:
   selector:
     matchLabels:
-      app.kubernetes.io/name: pi-hole
+      app: {{ .Chart.Name }}
   replicas: 1
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: pi-hole
-        app.kubernetes.io/version: {{ .Chart.AppVersion }}
+        app: {{ .Chart.Name }}
+        version: {{ .Chart.AppVersion }}
     spec:
       containers:
         - name: cloudflared

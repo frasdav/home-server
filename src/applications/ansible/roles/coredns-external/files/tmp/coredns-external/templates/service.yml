@@ -4,13 +4,13 @@ kind: Service
 metadata:
   name: coredns-external-tcp
   labels:
-    app.kubernetes.io/name: coredns-external
-    app.kubernetes.io/version: {{ .Chart.AppVersion }}
+    app: {{ .Chart.Name }}
+    version: {{ .Chart.AppVersion }}
   annotations:
     metallb.universe.tf/allow-shared-ip: coredns-external
 spec:
   selector:
-    app.kubernetes.io/name: coredns-external
+    app: {{ .Chart.Name }}
   type: LoadBalancer
   loadBalancerIP: 192.168.225.27
   externalTrafficPolicy: Local
@@ -25,13 +25,13 @@ kind: Service
 metadata:
   name: coredns-external-udp
   labels:
-    app.kubernetes.io/name: coredns-external
-    app.kubernetes.io/version: {{ .Chart.AppVersion }}
+    app: {{ .Chart.Name }}
+    version: {{ .Chart.AppVersion }}
   annotations:
     metallb.universe.tf/allow-shared-ip: coredns-external
 spec:
   selector:
-    app.kubernetes.io/name: coredns-external
+    app: {{ .Chart.Name }}
   type: LoadBalancer
   loadBalancerIP: 192.168.225.27
   externalTrafficPolicy: Local
