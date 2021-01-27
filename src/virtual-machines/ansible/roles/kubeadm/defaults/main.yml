@@ -1,1 +1,1 @@
-kubeadm_version: 1.17.7-00
+kubeadm_version: "{{ kubernetes_major_version }}.{{ kubernetes_minor_version }}.{{ kubernetes_patch_version }}-00"

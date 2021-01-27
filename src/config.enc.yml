@@ -1,5 +1,5 @@
 domain: ENC[AES256_GCM,data:96xBd70EPoUjEii9tw==,iv:JzPnGhhyeqDQFQVYDPp6CuA/S+OPbnXpNOQ/Ry+bKYo=,tag:2zphWQ/ixXz/fcevHV4q6w==,type:str]
-kube_worker_count: ENC[AES256_GCM,data:7A==,iv:45O2NRkOfa3PXZcnenJB7sIxKMdTZ91ULpxVig5mlz0=,tag:HFa0hRVu1uSdIOmziIVQnQ==,type:int]
+kube_worker_count: ENC[AES256_GCM,data:GQ==,iv:4DKn+Te3PcQBWAVKKpa0dROYNX14NVmjmYS1Uh79OT8=,tag:cvhULkJJSTJHEoiNcIkpdg==,type:int]
 network_cidr: ENC[AES256_GCM,data:MSjyICNIXzVBihWA7s/ejg==,iv:sGBjNsHNk2md7G0r9EbFTlRU75CDUnUUBSEfpyC/0Ao=,tag:AdotkJi0gmkugak/I55drg==,type:str]
 network_default_gateway: ENC[AES256_GCM,data:Z9j2jICa5HTAzIfkvA==,iv:hG4kEQ6TE0f67zgjffH9Lquj51ioaw9cAyfKe7ex1JU=,tag:czs1ruYdjRwsSWtkmRVVbQ==,type:str]
 network_dns_servers:
@@ -8,7 +8,7 @@ vcenter_datacenter: ENC[AES256_GCM,data:pC92RQ==,iv:9NhYhplmEpjsjzfHEoWdLxWrdntj
 vcenter_datastore: ENC[AES256_GCM,data:3KyQMsjH+mXDzA==,iv:edj6hUiSRsTcIxNYEWWkjS6FfywMR5kd/8orVwGcfAY=,tag:/v/CHMgVDxd4IWZugOjTMw==,type:str]
 vcenter_network: ENC[AES256_GCM,data:2XUZjU1OhvKgew==,iv:FRC99+tU8q1ZQ7tgWYqR25CIB9rMyem6wsXtdGCp/YA=,tag:wiq7+R+2UfGObtRflKcZeQ==,type:str]
 vcenter_password: ENC[AES256_GCM,data:sfUUZH9RQ+I3iG6Rtg==,iv:OKKAYz79WxWMPGqChDnweXEHHNuDBatGHmhrCfxf9UA=,tag:Gp2oPEbR0k8mJrCGs34q1Q==,type:str]
-vcenter_server: ENC[AES256_GCM,data:sTRa2DWlmclv51mE4jlxypL0QeXUOTg=,iv:rIFLfnZomCITBUUmAKzSPg/P5KR8drm3R19Ikt8beGk=,tag:IDl5mDwUFNkLCF+yarHyig==,type:str]
+vcenter_server: ENC[AES256_GCM,data:Twyot6acSE5KmLmLjx0=,iv:+XC8JOiQSwsqm4kaosZlAooRDWV3XdAJv7Zpl7QkS3Q=,tag:Goir1oApFT5I9cwwXDmQqQ==,type:str]
 vcenter_storage_policy: ENC[AES256_GCM,data:akSqwjgosCN3qBAO/xTeqNkikOg=,iv:wVz1U4SiAqMhGpQtq/YH6paLJIB+rGgvtyfpffuM0uo=,tag:5ccUnWMBRFQsssj6qMW0Iw==,type:str]
 vcenter_username: ENC[AES256_GCM,data:pH/huPyMvh7/i9TJU0oGPhnv3qReDU55Q7kw,iv:JUt3scAA0Zt8cH+Ds97vT61rbzt0JwSEhNFojSoLebE=,tag:tnOFM94tBOImyjn4s4Vvpg==,type:str]
 vsphere_host: ENC[AES256_GCM,data:hj4hjY/+V7oKLw1uCQ==,iv:BDohblznAuWFxNaCHhfpCswOR3dD0pV2dhiwdJmFyG0=,tag:RdRDTp0r2zxADlbyeSFh3w==,type:str]
@@ -17,8 +17,8 @@ sops:
     gcp_kms: []
     azure_kv: []
     hc_vault: []
-    lastmodified: '2021-01-14T10:07:53Z'
-    mac: ENC[AES256_GCM,data:fT2uGtc2OLVbT4pfpULs7NxEyne/+agDRIPU/EXC/xr0MJcJmGU4nH71hrVB/1BlJBIr3rXtmR+mJ+ApGWHt1dlJHSAl4l2XpzjpBjaJMLP+xORGxokEk+yHGR63CxF0rVkgixBuCpztWf/kzacVXfagZ+YJ0r5kWOpslG8TLEA=,iv:V4521tEBDtc2DzzoLw3C1+nzRB5tJo/IpBBeSdhrNTY=,tag:WDUzzhuyTG2oqHX3XK5ePQ==,type:str]
+    lastmodified: '2021-01-20T15:24:35Z'
+    mac: ENC[AES256_GCM,data:HpzyVrnfVadkibDxPY7K9le5mxGitJB74WXLApZ7ZT0+VdTeZv4+sBTdMloJegnTsvKxoTzqan9QqMQhacrivThS1s5Z2QNZTqieY1gu7xdZf9E1ds4QIAiy2Osg9JhLNYxCFSiiDkKAegHBjcoYOt1uKMukKfYAkftt3GdFj0U=,iv:/6MxQ7gqOk7WEm7N7oGFvOsPBr7nlGLXOUdfAJO/7ek=,tag:rseRG4skq2pnr7gxhPcptQ==,type:str]
     pgp:
     -   created_at: '2020-06-02T11:46:59Z'
         enc: |

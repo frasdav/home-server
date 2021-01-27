@@ -32,7 +32,7 @@
             - name: default
               protocol: layer2
               addresses:
-                - 192.168.225.26-192.168.225.29
+                - 192.168.225.25-192.168.225.29
     wait: yes
     state: present
 

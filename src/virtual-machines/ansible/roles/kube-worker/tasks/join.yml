@@ -36,7 +36,7 @@
   become: yes
 
 - name: Gather kube_master facts
-  setup:
+  setup: {}
   delegate_to: "{{ item }}"
   delegate_facts: yes
   when: not kubelet_conf.stat.exists

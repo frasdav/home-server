@@ -7,10 +7,10 @@
     state: directory
   become: yes
 
-- name: Copy 01-cgroup-manager.conf file
+- name: Copy 02-cgroup-manager.conf file
   copy:
-    src: "{{ role_path }}/files/etc/crio/crio.conf.d/01-cgroup-manager.conf"
-    dest: /etc/crio/crio.conf.d/01-cgroup-manager.conf
+    src: "{{ role_path }}/files/etc/crio/crio.conf.d/02-cgroup-manager.conf"
+    dest: /etc/crio/crio.conf.d/02-cgroup-manager.conf
     mode: "0644"
     owner: root
     group: root
@@ -21,7 +21,16 @@
   file:
     path: "/etc/cni/net.d/{{ item }}"
     state: absent
+  notify: Reload service
   become: yes
   with_items:
     - 100-crio-bridge.conf
     - 200-loopback.conf
+
+- name: Edit runc config
+  lineinfile:
+    path: /etc/crio/crio.conf.d/01-crio-runc.conf
+    regexp: "^runtime_path ="
+    line: runtime_path = ""
+  notify: Reload service
+  become: yes

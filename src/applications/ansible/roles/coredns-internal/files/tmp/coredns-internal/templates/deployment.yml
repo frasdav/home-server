@@ -71,6 +71,8 @@ spec:
             - containerPort: 5053
               name: cloudflared-udp
               protocol: UDP
+      nodeSelector:
+        kubernetes.io/os: linux
       volumes:
         - name: config
           configMap:

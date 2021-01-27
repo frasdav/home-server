@@ -59,6 +59,8 @@ spec:
               name: zones
               subPath: {{ index ($path | splitList "/") 1 }}
             {{- end }}
+      nodeSelector:
+        kubernetes.io/os: linux
       volumes:
         - name: config
           configMap:

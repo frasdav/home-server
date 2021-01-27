@@ -9,4 +9,5 @@
     repo: deb https://apt.kubernetes.io/ kubernetes-xenial main
     filename: kubernetes
     state: present
+  notify: Update repositories cache
   become: yes

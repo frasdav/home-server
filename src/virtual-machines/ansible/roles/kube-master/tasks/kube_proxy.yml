@@ -1,0 +1,17 @@
+- name: Download manifest
+  get_url:
+    url: https://github.com/kubernetes-sigs/sig-windows-tools/releases/download/v{{ windows_tools_version }}/kube-proxy.yml
+    dest: /tmp/kube-proxy.yml
+  register: kube_proxy_manifest
+
+- name: Edit manifest
+  lineinfile:
+    path: "{{ kube_proxy_manifest.dest }}"
+    regexp: "image: sigwindowstools/kube-proxy:VERSION-nanoserver"
+    line: "        image: sigwindowstools/kube-proxy:v{{ kubernetes_major_version }}.{{ kubernetes_minor_version }}.{{ kubernetes_patch_version }}-nanoserver"
+
+- name: Apply manifest
+  k8s:
+    src: "{{ kube_proxy_manifest.dest }}"
+    wait: yes
+    state: present

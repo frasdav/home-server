@@ -1,1 +1,1 @@
-crio_version: 1.17
+crio_package_version: "{{ kubernetes_major_version }}.{{ kubernetes_minor_version }}.1~0"

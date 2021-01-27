@@ -42,8 +42,37 @@
     wait: yes
     state: present
 
+- name: Check operator
+  command: kubectl get deployments couchbase-operator -n couchbase-operator
+  register: operator_installed
+  changed_when: no
+  failed_when: no
+
 - name: Apply operator
-  shell: "cbopcfg generate operator --scope cluster --namespace {{ role_name }} | kubectl create -f -"
+  shell: |
+    set -o pipefail && \
+    cbopcfg generate operator --scope cluster --namespace {{ role_name }} | kubectl create -f -
+  args:
+    executable: /bin/bash
+  when: operator_installed.rc != 0
+
+- name: Check admission controller
+  command: kubectl get deployments couchbase-operator-admission -n couchbase-operator
+  register: admission_installed
+  changed_when: no
+  failed_when: no
 
 - name: Apply admission controller
-  shell: "cbopcfg generate admission --namespace {{ role_name }} | kubectl create -f -"
+  shell: |
+    set -o pipefail && \
+    cbopcfg generate admission --namespace {{ role_name }} | kubectl create -f -
+  args:
+    executable: /bin/bash
+  when: admission_installed.rc != 0
+
+- name: Apply backup
+  shell: |
+    set -o pipefail && \
+    cbopcfg generate backup --namespace {{ role_name }} | kubectl apply -f -
+  args:
+    executable: /bin/bash

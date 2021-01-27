@@ -1,12 +1,27 @@
-- name: Add openSUSE Apt key
+- name: Add libcontainers Apt key
   apt_key:
     url: https://download.opensuse.org/repositories/devel:kubic:libcontainers:stable/x{{ ansible_lsb.id }}_{{ ansible_lsb.release }}/Release.key
     state: present
   become: yes
 
-- name: Add openSUSE repository
+- name: Add libcontainers repository
   apt_repository:
     repo: deb http://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/x{{ ansible_lsb.id }}_{{ ansible_lsb.release }}/ /
-    filename: libcontainers
+    filename: devel:kubic:libcontainers:stable
     state: present
+  notify: Update repositories cache
+  become: yes
+
+- name: Add cri-o Apt key
+  apt_key:
+    url: https://download.opensuse.org/repositories/devel:kubic:libcontainers:stable:cri-o:{{ kubernetes_major_version }}.{{ kubernetes_minor_version }}/x{{ ansible_lsb.id }}_{{ ansible_lsb.release }}/Release.key
+    state: present
+  become: yes
+
+- name: Add cri-o repository
+  apt_repository:
+    repo: deb http://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/{{ kubernetes_major_version }}.{{ kubernetes_minor_version }}/x{{ ansible_lsb.id }}_{{ ansible_lsb.release }}/ /
+    filename: devel:kubic:libcontainers:stable:cri-o:{{ kubernetes_major_version }}.{{ kubernetes_minor_version }}
+    state: present
+  notify: Update repositories cache
   become: yes
