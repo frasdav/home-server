@@ -1,0 +1,10 @@
+admin:
+  password: {{ admin.password }}
+  username: {{ admin.username }}
+certificates:
+  ca: |
+    {{ certificates.ca | indent(4, False) }}
+  crt: |
+    {{ certificates.crt | indent(4, False) }}
+  key: |
+    {{ certificates.key | indent(4, False) }}

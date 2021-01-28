@@ -4,3 +4,5 @@
   roles:
     - coredns-internal
     - coredns-external
+    - couchbase-server
+    - elasticsearch

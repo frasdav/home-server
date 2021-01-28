@@ -41,10 +41,3 @@ data:
   {{- $data | toString | nindent 4 }}
   {{ end }}
 ---
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: pi-hole-custom-dnsmasq
-data:
-  02-custom.conf: |
-    port=5053

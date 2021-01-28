@@ -1,1 +1,2 @@
 coredns_external_version: 1.7.0
+load_balancer_ip: 192.168.225.52

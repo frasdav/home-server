@@ -1,0 +1,50 @@
+---
+apiVersion: couchbase.com/v2
+kind: CouchbaseCluster
+metadata:
+  name: couchbase
+  labels:
+    app: {{ .Chart.Name }}
+    version: {{ .Chart.Version }}
+spec:
+  image: couchbase/server:6.6.0
+  antiAffinity: true
+  cluster:
+    dataServiceMemoryQuota: 6Gi
+    indexServiceMemoryQuota: 2Gi
+  security:
+    adminSecret: couchbase-server-auth
+  networking:
+    exposeAdminConsole: false
+    exposedFeatures:
+      - xdcr
+      - client
+    exposedFeatureServiceType: LoadBalancer
+    dns:
+      domain: dev.airheadcloud.net
+    tls:
+      static:
+        serverSecret: couchbase-server-tls
+        operatorSecret: couchbase-operator-tls
+  buckets:
+    managed: true
+  servers:
+    - size: 3
+      name: core_services
+      services:
+        - data
+        - index
+        - query
+      volumeMounts:
+        default: couchbase
+  backup:
+    managed: true
+    image: couchbase/operator-backup:6.6.0
+    serviceAccountName: couchbase-backup
+  volumeClaimTemplates:
+    - metadata:
+        name: couchbase
+      spec:
+        resources:
+          requests:
+            storage: 5Gi

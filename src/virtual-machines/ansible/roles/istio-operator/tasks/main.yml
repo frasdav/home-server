@@ -56,7 +56,7 @@
               k8s:
                 service:
                   type: LoadBalancer
-                  loadBalancerIP: 192.168.225.25
+                  loadBalancerIP: 192.168.225.50
         addonComponents:
           grafana:
             enabled: true

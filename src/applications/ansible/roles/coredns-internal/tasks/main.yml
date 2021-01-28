@@ -16,10 +16,13 @@
     - deploy
     - destroy
 
-- name: Create Chart.yaml
+- name: Create Helm files
   template:
-    src: "{{ role_path }}/templates/tmp/{{ role_name }}/Chart.yaml.j2"
-    dest: "{{ directory.path }}/Chart.yaml"
+    src: "{{ role_path }}/templates/tmp/{{ role_name }}/{{ item }}.j2"
+    dest: "{{ directory.path }}/{{ item }}"
+  with_items:
+    - Chart.yaml
+    - values.yaml
   tags:
     - deploy
     - destroy
