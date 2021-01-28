@@ -5,7 +5,7 @@ metadata:
   name: pi-hole
   labels:
     app: {{ .Chart.Name }}
-    version: {{ .Chart.AppVersion }}
+    version: {{ .Chart.Version }}
 spec:
   rules:
     - host: pi-hole.apps.fdavidson.net

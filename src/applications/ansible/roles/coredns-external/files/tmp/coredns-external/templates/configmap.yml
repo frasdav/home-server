@@ -5,7 +5,7 @@ metadata:
   name: coredns-external-config
   labels:
     app: {{ .Chart.Name }}
-    version: {{ .Chart.AppVersion }}
+    version: {{ .Chart.Version }}
 data:
   Corefile: |
     .:53 {
@@ -58,7 +58,7 @@ metadata:
   name: coredns-external-zones
   labels:
     app: {{ .Chart.Name }}
-    version: {{ .Chart.AppVersion }}
+    version: {{ .Chart.Version }}
 data:
   {{- range $path, $data := .Files.Glob "zones/**" }}
   {{ index ($path | splitList "/") 1 }}: |-

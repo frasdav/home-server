@@ -1,5 +1,5 @@
 domain: ENC[AES256_GCM,data:96xBd70EPoUjEii9tw==,iv:JzPnGhhyeqDQFQVYDPp6CuA/S+OPbnXpNOQ/Ry+bKYo=,tag:2zphWQ/ixXz/fcevHV4q6w==,type:str]
-kube_worker_count: ENC[AES256_GCM,data:GQ==,iv:4DKn+Te3PcQBWAVKKpa0dROYNX14NVmjmYS1Uh79OT8=,tag:cvhULkJJSTJHEoiNcIkpdg==,type:int]
+kube_worker_count: ENC[AES256_GCM,data:yg==,iv:z2EZM36odpXhr5+rUbSUw+C8lY3uoP7K5XxOSyI5QVQ=,tag:MxKF9Ek+KUXOv5DzKjkn/g==,type:int]
 network_cidr: ENC[AES256_GCM,data:MSjyICNIXzVBihWA7s/ejg==,iv:sGBjNsHNk2md7G0r9EbFTlRU75CDUnUUBSEfpyC/0Ao=,tag:AdotkJi0gmkugak/I55drg==,type:str]
 network_default_gateway: ENC[AES256_GCM,data:Z9j2jICa5HTAzIfkvA==,iv:hG4kEQ6TE0f67zgjffH9Lquj51ioaw9cAyfKe7ex1JU=,tag:czs1ruYdjRwsSWtkmRVVbQ==,type:str]
 network_dns_servers:
@@ -17,8 +17,8 @@ sops:
     gcp_kms: []
     azure_kv: []
     hc_vault: []
-    lastmodified: '2021-01-20T15:24:35Z'
-    mac: ENC[AES256_GCM,data:HpzyVrnfVadkibDxPY7K9le5mxGitJB74WXLApZ7ZT0+VdTeZv4+sBTdMloJegnTsvKxoTzqan9QqMQhacrivThS1s5Z2QNZTqieY1gu7xdZf9E1ds4QIAiy2Osg9JhLNYxCFSiiDkKAegHBjcoYOt1uKMukKfYAkftt3GdFj0U=,iv:/6MxQ7gqOk7WEm7N7oGFvOsPBr7nlGLXOUdfAJO/7ek=,tag:rseRG4skq2pnr7gxhPcptQ==,type:str]
+    lastmodified: '2021-01-28T09:01:08Z'
+    mac: ENC[AES256_GCM,data:6k9toMZwXKbdcBSYq+epdc8ainVQn6/kRov+tbNRtxU35jsoYd7n7u1iZEjlHeHj5COor1spO1ahlCS7MdlmqMnJyy9vMMPChnxTssVwI341hVH0yVjogWKo1NHOf3gMSqoHQyUCpx1mly33C1fl3ExPSez1yQZI/dbOr6pDgTg=,iv:C4rMc1Gc5tTkHzfUV5jLVW0r8eh9jzyddxG9fvC6n+o=,tag:k9TlZnGYNk1A2kAw0L1tUg==,type:str]
     pgp:
     -   created_at: '2020-06-02T11:46:59Z'
         enc: |

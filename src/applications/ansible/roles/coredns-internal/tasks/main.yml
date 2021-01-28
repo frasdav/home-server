@@ -25,7 +25,7 @@
     - destroy
 
 - name: Apply chart
-  shell: "helm upgrade {{ role_name }} {{ directory.path }} --install --repo https://kubernetes-charts.storage.googleapis.com"
+  shell: "helm upgrade {{ role_name }} {{ directory.path }} --install"
   tags:
     - deploy
 

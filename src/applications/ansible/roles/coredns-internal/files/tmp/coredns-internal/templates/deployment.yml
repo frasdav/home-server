@@ -5,7 +5,7 @@ metadata:
   name: coredns-internal
   labels:
     app: {{ .Chart.Name }}
-    version: {{ .Chart.AppVersion }}
+    version: {{ .Chart.Version }}
 spec:
   selector:
     matchLabels:
@@ -17,7 +17,7 @@ spec:
     metadata:
       labels:
         app: {{ .Chart.Name }}
-        version: {{ .Chart.AppVersion }}
+        version: {{ .Chart.Version }}
       annotations:
         checksum.config: {{ include (print $.Template.BasePath "/configmap.yml") . | sha256sum | trunc 63 }}
     spec:

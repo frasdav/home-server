@@ -5,7 +5,7 @@ metadata:
   name: coredns-external-tcp
   labels:
     app: {{ .Chart.Name }}
-    version: {{ .Chart.AppVersion }}
+    version: {{ .Chart.Version }}
   annotations:
     metallb.universe.tf/allow-shared-ip: coredns-external
 spec:
@@ -26,7 +26,7 @@ metadata:
   name: coredns-external-udp
   labels:
     app: {{ .Chart.Name }}
-    version: {{ .Chart.AppVersion }}
+    version: {{ .Chart.Version }}
   annotations:
     metallb.universe.tf/allow-shared-ip: coredns-external
 spec:

@@ -5,7 +5,7 @@ metadata:
   name: pi-hole-config
   labels:
     app: {{ .Chart.Name }}
-    version: {{ .Chart.AppVersion }}
+    version: {{ .Chart.Version }}
   annotations:
     volume.beta.kubernetes.io/storage-class: vsphere
 spec:
