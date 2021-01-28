@@ -1,5 +1,5 @@
 ;
-; BIND data file for internal dev.airhead.io
+; BIND data file for internal dev.airheadheadcloud.net
 ;
 $TTL 86400
 @   IN    SOA    dns01.fdavidson.net. admin.fdavidson.net. (
@@ -14,6 +14,6 @@ $TTL 86400
 @                IN      NS        dns01.fdavidson.net.
 
 ; A records
-couchbase-0000   300     IN        A        192.168.225.51
-couchbase-0001   300     IN        A        192.168.225.52
-couchbase-0002   300     IN        A        192.168.225.53
+couchbase-0000   300     IN        A        192.168.225.54
+couchbase-0001   300     IN        A        192.168.225.55
+couchbase-0002   300     IN        A        192.168.225.56

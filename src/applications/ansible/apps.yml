@@ -6,3 +6,4 @@
     - coredns-external
     - couchbase-server
     - elasticsearch
+    - kibana

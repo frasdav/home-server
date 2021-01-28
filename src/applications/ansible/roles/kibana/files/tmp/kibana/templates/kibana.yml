@@ -1,0 +1,15 @@
+---
+apiVersion: kibana.k8s.elastic.co/v1
+kind: Kibana
+metadata:
+  name: kibana
+  labels:
+    app: {{ .Chart.Name }}
+    version: {{ .Chart.Version }}
+spec:
+  version: {{ .Chart.AppVersion }}
+  count: 1
+  config:
+    elasticsearch.ssl.verificationMode: none
+  elasticsearchRef:
+    name: elasticsearch
