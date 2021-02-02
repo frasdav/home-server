@@ -1,23 +1,23 @@
 data "vsphere_datacenter" "main" {
-  name = "Home"
+  name = var.vcenter_datacenter
 }
 
 data "vsphere_datastore" "main" {
-  name          = "Local VMFS"
-  datacenter_id = "${data.vsphere_datacenter.main.id}"
-}
-
-data "vsphere_resource_pool" "kubernetes" {
-  name          = "Kubernetes"
-  datacenter_id = "${data.vsphere_datacenter.main.id}"
+  name          = var.vcenter_datastore
+  datacenter_id = data.vsphere_datacenter.main.id
 }
 
 data "vsphere_network" "main" {
-  name          = "VM Network"
-  datacenter_id = "${data.vsphere_datacenter.main.id}"
+  name          = var.vcenter_network
+  datacenter_id = data.vsphere_datacenter.main.id
+}
+
+data "vsphere_host" "main" {
+  name          = var.vsphere_host
+  datacenter_id = data.vsphere_datacenter.main.id
 }
 
 data "vsphere_virtual_machine" "ubuntu" {
   name          = "Ubuntu 20.04"
-  datacenter_id = "${data.vsphere_datacenter.main.id}"
+  datacenter_id = data.vsphere_datacenter.main.id
 }

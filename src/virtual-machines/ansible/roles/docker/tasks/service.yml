@@ -1,0 +1,6 @@
+- name: Run service
+  systemd:
+    name: docker
+    enabled: yes
+    state: started
+  become: yes

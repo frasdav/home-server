@@ -3,10 +3,16 @@ const govc = require('./govc');
 const govcVmInfoInterval = 5000;
 const waitForVmInfoTimeout = 18000000;
 
-const waitForVmPoweredOff = (vmName) => {
+const templateVmExists = async (templateVmName, config) => {
+  const templateVmInfoResponse = await govc(`vm.info -json "${templateVmName}"`, config);
+  const templateVmInfo = JSON.parse(templateVmInfoResponse);
+  return templateVmInfo.VirtualMachines && templateVmInfo.VirtualMachines.length > 0;
+};
+
+const waitForVmPoweredOff = (vmName, config) => {
   const start = Date.now();
   function retryWaitForVmPoweredOff(resolve, reject) {
-    govc(`vm.info -json "${vmName}"`)
+    govc(`vm.info -json "${vmName}"`, config)
       .then((vmInfoResponse) => {
         const vmInfo = JSON.parse(vmInfoResponse);
         if (vmInfo.VirtualMachines[0].Runtime.PowerState === 'poweredOff') {
@@ -26,5 +32,6 @@ const waitForVmPoweredOff = (vmName) => {
 };
 
 module.exports = {
+  templateVmExists,
   waitForVmPoweredOff,
 };

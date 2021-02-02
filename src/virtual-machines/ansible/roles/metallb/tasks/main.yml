@@ -1,0 +1,43 @@
+- name: Apply namespace
+  k8s:
+    definition: "{{ lookup('url', 'https://raw.githubusercontent.com/metallb/metallb/v{{ metal_lb_version }}/manifests/namespace.yaml', split_lines=False) | from_yaml_all }}"
+    wait: yes
+    state: present
+
+- name: Apply secret
+  k8s:
+    definition:
+      apiVersion: v1
+      kind: Secret
+      metadata:
+        name: memberlist
+        namespace: metallb-system
+      type: Opaque
+      data:
+        secretkey: NDRnR2p0NU9manVwbDZYRlZDVDhTdTc2MkJ2dWVrVDlXalVtUUlDUGRlSzJxeVhPaHEwTHRBcFM1S1RqZWlqeApuMDdSQkZSc09iNE42TE9vNWh4RXJoM0pDNCtzN2xGRFQ2eThCNnk5L3NwOTE1dVZPdGk5WU5nUTR4eGlqOHVrCnROTTRmZDlJOUNBUFlkWGs0d2thRk8ycmtqeGNhZklUd1VjQWk5TmFQaFE9
+    wait: yes
+    state: present
+
+- name: Apply config map
+  k8s:
+    definition:
+      apiVersion: v1
+      kind: ConfigMap
+      metadata:
+        name: config
+        namespace: metallb-system
+      data:
+        config: |
+          address-pools:
+            - name: default
+              protocol: layer2
+              addresses:
+                - 192.168.225.50-192.168.225.59
+    wait: yes
+    state: present
+
+- name: Apply manifest
+  k8s:
+    definition: "{{ lookup('url', 'https://raw.githubusercontent.com/metallb/metallb/v{{ metal_lb_version }}/manifests/metallb.yaml', split_lines=False) | from_yaml_all }}"
+    wait: yes
+    state: present

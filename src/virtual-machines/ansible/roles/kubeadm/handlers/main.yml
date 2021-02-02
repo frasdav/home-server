@@ -1,3 +1,4 @@
-- name: Reboot
-  reboot:
+- name: Update repositories cache
+  apt:
+    update_cache: yes
   become: yes

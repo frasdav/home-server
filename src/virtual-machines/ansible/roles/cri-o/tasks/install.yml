@@ -1,0 +1,11 @@
+- name: Install
+  apt:
+    name: cri-o={{ crio_package_version }}
+    state: present
+  become: yes
+
+- name: Hold
+  dpkg_selections:
+    name: cri-o
+    selection: hold
+  become: yes

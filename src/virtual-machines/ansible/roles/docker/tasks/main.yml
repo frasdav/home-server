@@ -5,3 +5,5 @@
 - import_tasks: config.yml
 
 - meta: flush_handlers
+
+- import_tasks: service.yml

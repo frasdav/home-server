@@ -1,0 +1,38 @@
+- name: Download manifest
+  get_url:
+    url: https://raw.githubusercontent.com/coreos/flannel/v{{ flannel_version }}/Documentation/kube-flannel.yml
+    dest: /tmp/kube-flannel.yml
+  register: flannel_manifest
+
+- name: Edit manifest
+  blockinfile:
+    path: "{{ flannel_manifest.dest }}"
+    marker: "{mark}"
+    marker_begin: "  net-conf.json: |"
+    marker_end: "---"
+    block: "{{ net_conf | indent( width=4, indentfirst=True) }}"
+    state: present
+
+- name: Apply manifest
+  k8s:
+    src: "{{ flannel_manifest.dest }}"
+    wait: yes
+    state: present
+
+- name: Download Windows manifest
+  get_url:
+    url: https://github.com/kubernetes-sigs/sig-windows-tools/releases/download/v{{ windows_tools_version }}/flannel-overlay.yml
+    dest: /tmp/flannel-overlay.yml
+  register: windows_manifest
+
+- name: Edit Windows manifest
+  lineinfile:
+    path: "{{ windows_manifest.dest }}"
+    regexp: 'wins cli process run --path /k/flannel/setup.exe --args "--mode=overlay --interface=Ethernet"'
+    line: '    wins cli process run --path /k/flannel/setup.exe --args "--mode=overlay --interface=Ethernet0"'
+
+- name: Apply Windows daemonset
+  k8s:
+    src: "{{ windows_manifest.dest }}"
+    wait: yes
+    state: present

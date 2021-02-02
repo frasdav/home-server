@@ -1,0 +1,19 @@
+#cloud-config
+users:
+  - default
+  - name: ubuntu
+    ssh-authorized-keys:
+      - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC2vlMUFRhbged6eP4jUQQgJyDUB2SFFojOov2nR4957SNXpcRKhT6HHSPVLI9FfBB4YRjMC3qseQOtS2QncnL+ZbZuSxybkqy5XGCO7zQs9TGEUwf8YPWXR9JTKxFOtL4+s4ucr4YKZkNkysjMl1R2NjcE3fKbHym6bGA0KTNguTBtGe5hipn4utmpQTS4tvJkm2Ny+XeEGTYd2v1d40A9QU614vTzKtOG56acrwG7B2jdGLlSbFamhW9kS6QEGDWhkc6wqkSM8Uly4TLLSYlHJLe5KnZpXnY9+LxXaEW0KpRXuewjpz1Sq46tgwqoDq18q17l6xuG9+ggNGpK0LrZ
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    groups: sudo
+    shell: /bin/bash
+package_upgrade: true
+packages:
+  - python3-pip
+runcmd:
+  - 'echo "disable_vmware_customization: false" >> /etc/cloud/cloud.cfg'
+  - echo -n > /etc/machine-id
+final_message: "The system is prepped, after $UPTIME seconds"
+power_state:
+  timeout: 30
+  mode: poweroff

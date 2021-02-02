@@ -1,0 +1,50 @@
+- name: Apply manifest
+  k8s:
+    definition: "{{ lookup('url', 'https://raw.githubusercontent.com/kubernetes/dashboard/v{{ kubernetes_dashboard_version }}/aio/deploy/recommended.yaml', split_lines=False) | from_yaml_all }}"
+    wait: yes
+    state: present
+  tags:
+    - deploy
+
+- name: Apply ingress
+  k8s:
+    definition:
+      apiVersion: extensions/v1beta1
+      kind: Ingress
+      metadata:
+        name: kubernetes-dashboard
+        namespace: kubernetes-dashboard
+        annotations:
+          nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+      spec:
+        rules:
+          - host: kube.apps.fdavidson.net
+            http:
+              paths:
+                - path: /
+                  backend:
+                    serviceName: kubernetes-dashboard
+                    servicePort: 443
+        tls:
+          - hosts:
+              - kube.apps.fdavidson.net
+    state: present
+  tags:
+    - deploy
+
+- name: Delete ingress
+  k8s:
+    api_version: extensions/v1beta1
+    kind: Ingress
+    name: kubernetes-dashboard
+    namespace: kubernetes-dashboard
+    state: absent
+  tags:
+    - destroy
+
+- name: Delete manifest
+  k8s:
+    definition: "{{ lookup('url', 'https://raw.githubusercontent.com/kubernetes/dashboard/v{{ kubernetes_dashboard_version }}/aio/deploy/recommended.yaml', split_lines=False) | from_yaml_all }}"
+    state: absent
+  tags:
+    - destroy

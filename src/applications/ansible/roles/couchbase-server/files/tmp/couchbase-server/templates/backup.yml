@@ -1,0 +1,15 @@
+---
+apiVersion: couchbase.com/v2
+kind: CouchbaseBackup
+metadata:
+  name: couchbase-backup
+  labels:
+    app: {{ .Chart.Name }}
+    version: {{ .Chart.Version }}
+spec:
+  strategy: full_incremental
+  full:
+    schedule: "0 3 * * 0" 
+  incremental:
+    schedule: "0 3 * * 1-6" 
+  size: 25Gi

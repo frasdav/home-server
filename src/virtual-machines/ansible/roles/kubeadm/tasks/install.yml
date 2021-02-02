@@ -6,3 +6,13 @@
       - kubectl={{ kubeadm_version }}
     state: present
   become: yes
+
+- name: Hold kubeadm, kubelet and kubectl
+  dpkg_selections:
+    name: "{{ item }}"
+    selection: hold
+  become: yes
+  with_items:
+    - kubeadm
+    - kubelet
+    - kubectl

@@ -1,0 +1,6 @@
+- name: Run service
+  systemd:
+    name: crio
+    enabled: yes
+    state: started
+  become: yes

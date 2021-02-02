@@ -1,0 +1,26 @@
+- name: Apply manifest
+  k8s:
+    definition: "{{ lookup('url', 'https://github.com/kubernetes-sigs/metrics-server/releases/download/v{{ metrics_server_version }}/components.yaml', split_lines=False) | from_yaml_all }}"
+    wait: yes
+    state: present
+
+- name: Patch deployment
+  k8s:
+    definition:
+      apiVersion: v1
+      kind: Deployment
+      metadata:
+        name: metrics-server
+        namespace: kube-system
+      spec:
+        template:
+          spec:
+            containers:
+              - name: metrics-server
+                args:
+                  - --cert-dir=/tmp
+                  - --secure-port=4443
+                  - --kubelet-insecure-tls
+                  - --kubelet-preferred-address-types=InternalIP
+    wait: yes
+    state: present

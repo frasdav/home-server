@@ -2,12 +2,14 @@
 
 const logger = require('./shared/logger');
 
-const virtualMachineTemplate = require('./virtual-machine-template');
+const applications = require('./applications');
+const virtualMachineTemplates = require('./virtual-machine-templates');
 const virtualMachines = require('./virtual-machines');
 
 const deploy = async () => {
-  await virtualMachineTemplate.deploy();
+  await virtualMachineTemplates.deploy();
   await virtualMachines.deploy();
+  await applications.deploy();
 };
 
 deploy()

@@ -3,8 +3,18 @@
     path: /etc/kubernetes/pki/ca.key
   register: kube_ca
 
+- name: Copy init.yml file
+  copy:
+    src: "{{ role_path }}/files/etc/kubernetes/init.yml"
+    dest: /etc/kubernetes/init.yml
+    mode: "0644"
+    owner: root
+    group: root
+  when: not kube_ca.stat.exists
+  become: yes
+
 - name: Init cluster
-  shell: kubeadm init
+  shell: kubeadm init --config /etc/kubernetes/init.yml
   register: init_cluster
   when: not kube_ca.stat.exists
   become: yes
@@ -12,7 +22,7 @@
 - name: Create .kube directory
   file:
     path: $HOME/.kube
-    mode: 0755
+    mode: "0755"
     state: directory
   register: kube_dir
   when: init_cluster.changed

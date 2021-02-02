@@ -1,0 +1,24 @@
+- name: Load kernel modules
+  modprobe:
+    name: "{{ item }}"
+    state: present
+  changed_when: no
+  become: yes
+  with_items:
+    - br_netfilter
+    - overlay
+
+- name: Enable iptables to see IPv4 traffic
+  sysctl:
+    name: "{{ item.name }}"
+    value: "{{ item.value }}"
+    sysctl_file: /etc/sysctl.d/99-kubernetes-cri.conf
+    state: present
+  become: yes
+  with_items:
+    - name: net.bridge.bridge-nf-call-ip6tables
+      value: 1
+    - name: net.bridge.bridge-nf-call-iptables
+      value: 1
+    - name: net.ipv4.ip_forward
+      value: 1

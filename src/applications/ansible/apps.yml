@@ -1,0 +1,9 @@
+- name: Apps
+  hosts:
+    - all
+  roles:
+    - coredns-internal
+    - coredns-external
+    - couchbase-server
+    - elasticsearch
+    - kibana

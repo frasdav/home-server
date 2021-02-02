@@ -1,0 +1,4 @@
+kubernetes_major_version: 1
+kubernetes_minor_version: 19
+kubernetes_patch_version: 7
+windows_tools_version: 0.1.5

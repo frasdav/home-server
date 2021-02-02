@@ -1,0 +1,75 @@
+- name: Download archive
+  get_url:
+    url: "https://github.com/istio/istio/releases/download/{{ istio_version }}/istio-{{ istio_version }}-linux-amd64.tar.gz"
+    dest: "/tmp/istio-{{ istio_version }}-linux-amd64.tar.gz"
+  register: archive
+
+- name: Extract archive
+  unarchive:
+    src: "{{ archive.dest }}"
+    remote_src: yes
+    dest: /tmp
+
+- name: Get binary stats
+  stat:
+    path: /usr/local/bin/istioctl
+  register: binary
+
+- name: Copy binary
+  copy:
+    src: "/tmp/istio-{{ istio_version }}/bin/istioctl"
+    remote_src: yes
+    dest: /usr/local/bin
+    owner: root
+    group: root
+    mode: "0755"
+  when: binary.stat.exists == false
+  become: yes
+
+- name: Apply namespace
+  k8s:
+    definition:
+      apiVersion: v1
+      kind: Namespace
+      metadata:
+        name: istio-system
+    wait: yes
+    state: present
+
+- name: Initialize operator
+  shell: istioctl operator init
+
+- name: Apply operator
+  k8s:
+    definition:
+      apiVersion: install.istio.io/v1alpha1
+      kind: IstioOperator
+      metadata:
+        name: istio-control-plane
+        namespace: istio-system
+      spec:
+        profile: default
+        components:
+          ingressGateways:
+            - name: istio-ingressgateway
+              enabled: true
+              k8s:
+                service:
+                  type: LoadBalancer
+                  loadBalancerIP: 192.168.225.50
+        addonComponents:
+          grafana:
+            enabled: true
+          prometheus:
+            enabled: true
+          tracing:
+            enabled: true
+          kiali:
+            enabled: true
+        values:
+          kiali:
+            dashboard:
+              auth:
+                strategy: anonymous
+    wait: yes
+    state: present

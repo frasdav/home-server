@@ -1,0 +1,10 @@
+flannel_version: 0.13.0
+net_conf: |
+  {
+    "Network": "10.244.0.0/16",
+    "Backend": {
+      "Type": "vxlan",
+      "VNI" : 4096,
+      "Port": 4789
+    }
+  }

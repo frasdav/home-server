@@ -1,0 +1,29 @@
+---
+apiVersion: kubeadm.k8s.io/v1beta2
+kind: InitConfiguration
+nodeRegistration:
+  kubeletExtraArgs:
+    cgroup-driver: systemd
+    cloud-provider: vsphere
+    cloud-config: /etc/kubernetes/vsphere.conf
+---
+apiVersion: kubeadm.k8s.io/v1beta2
+kind: ClusterConfiguration
+apiServer:
+  extraArgs:
+    cloud-provider: vsphere
+    cloud-config: /etc/kubernetes/vsphere.conf
+  extraVolumes:
+    - name: cloud
+      hostPath: /etc/kubernetes/vsphere.conf
+      mountPath: /etc/kubernetes/vsphere.conf
+controllerManager:
+  extraArgs:
+    cloud-provider: vsphere
+    cloud-config: /etc/kubernetes/vsphere.conf
+  extraVolumes:
+    - name: cloud
+      hostPath: /etc/kubernetes/vsphere.conf
+      mountPath: /etc/kubernetes/vsphere.conf
+networking:
+  podSubnet: 10.244.0.0/16

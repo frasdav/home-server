@@ -1,0 +1,29 @@
+- name: Get binary stats
+  stat:
+    path: /usr/local/bin/helm
+  register: binary
+
+- name: Download archive
+  get_url:
+    url: "https://get.helm.sh/helm-v{{ helm_version }}-linux-amd64.tar.gz"
+    dest: /tmp/helm-v{{ helm_version }}-linux-amd64.tar.gz
+  register: archive
+  when: binary.stat.exists == false
+
+- name: Extract archive
+  unarchive:
+    src: "{{ archive.dest }}"
+    remote_src: yes
+    dest: /tmp
+  when: binary.stat.exists == false
+
+- name: Copy binary
+  copy:
+    src: /tmp/linux-amd64/helm
+    remote_src: yes
+    dest: /usr/local/bin
+    owner: root
+    group: root
+    mode: "0755"
+  when: binary.stat.exists == false
+  become: yes

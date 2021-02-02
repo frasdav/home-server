@@ -1,0 +1,21 @@
+[Global]
+user = "{{ vcenter_username }}"
+password = "{{ vcenter_password }}"
+port = "443"
+insecure-flag = "1"
+
+[VirtualCenter "{{ vcenter_server }}"]
+datacenters = "{{ vcenter_datacenter }}"
+
+[Workspace]
+server = "{{ vcenter_server }}"
+datacenter = "{{ vcenter_datacenter }}"
+default-datastore = "{{ vcenter_datastore }}"
+resourcepool-path = "Kubernetes"
+folder = "Kubernetes"
+
+[Disk]
+scsicontrollertype = pvscsi
+
+[Network]
+public-network = "{{ vcenter_network }}"

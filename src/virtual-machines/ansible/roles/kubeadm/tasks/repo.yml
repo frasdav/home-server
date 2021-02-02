@@ -7,5 +7,7 @@
 - name: Add Kubernetes Apt repository
   apt_repository:
     repo: deb https://apt.kubernetes.io/ kubernetes-xenial main
+    filename: kubernetes
     state: present
+  notify: Update repositories cache
   become: yes

@@ -1,0 +1,14 @@
+- name: Apply manifest
+  k8s:
+    definition: "{{ lookup('url', 'https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v{{ nginx_ingress_version }}/deploy/static/provider/cloud/deploy.yaml', split_lines=False) | from_yaml_all }}"
+    wait: yes
+    state: present
+  tags:
+    - deploy
+
+- name: Delete manifest
+  k8s:
+    definition: "{{ lookup('url', 'https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v{{ nginx_ingress_version }}/deploy/static/provider/cloud/deploy.yaml', split_lines=False) | from_yaml_all }}"
+    state: absent
+  tags:
+    - destroy

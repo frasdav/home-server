@@ -1,0 +1,78 @@
+- name: Download archive
+  get_url:
+    url: "https://packages.couchbase.com/kubernetes/{{ couchbase_operator_version }}/couchbase-autonomous-operator-kubernetes_{{ couchbase_operator_version }}-linux-x86_64.tar.gz"
+    dest: "/tmp/couchbase-autonomous-operator-kubernetes_{{ couchbase_operator_version }}-linux-x86_64.tar.gz"
+  register: archive
+
+- name: Extract archive
+  unarchive:
+    src: "{{ archive.dest }}"
+    remote_src: yes
+    dest: /tmp
+
+- name: Get binary stats
+  stat:
+    path: /usr/local/bin/cbopcfg
+  register: binary
+
+- name: Copy binary
+  copy:
+    src: "/tmp/couchbase-autonomous-operator-kubernetes_{{ couchbase_operator_version }}-linux-x86_64/bin/cbopcfg"
+    remote_src: yes
+    dest: /usr/local/bin
+    owner: root
+    group: root
+    mode: "0755"
+  when: binary.stat.exists == false
+  become: yes
+
+- name: Apply custom resource definitions
+  k8s:
+    src: "/tmp/couchbase-autonomous-operator-kubernetes_{{ couchbase_operator_version }}-linux-x86_64/crd.yaml"
+    wait: yes
+    state: present
+
+- name: Apply namespace
+  k8s:
+    definition:
+      apiVersion: v1
+      kind: Namespace
+      metadata:
+        name: "{{ role_name }}"
+    wait: yes
+    state: present
+
+- name: Check operator
+  command: kubectl get deployments couchbase-operator -n couchbase-operator
+  register: operator_installed
+  changed_when: no
+  failed_when: no
+
+- name: Apply operator
+  shell: |
+    set -o pipefail && \
+    cbopcfg generate operator --scope cluster --namespace {{ role_name }} | kubectl create -f -
+  args:
+    executable: /bin/bash
+  when: operator_installed.rc != 0
+
+- name: Check admission controller
+  command: kubectl get deployments couchbase-operator-admission -n couchbase-operator
+  register: admission_installed
+  changed_when: no
+  failed_when: no
+
+- name: Apply admission controller
+  shell: |
+    set -o pipefail && \
+    cbopcfg generate admission --namespace {{ role_name }} | kubectl create -f -
+  args:
+    executable: /bin/bash
+  when: admission_installed.rc != 0
+
+- name: Apply backup
+  shell: |
+    set -o pipefail && \
+    cbopcfg generate backup --namespace {{ role_name }} | kubectl apply -f -
+  args:
+    executable: /bin/bash

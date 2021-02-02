@@ -1,0 +1,17 @@
+;
+; BIND reverse data file for 192.168.225.0/24
+;
+$TTL 86400
+@   IN    SOA    dns01.fdavidson.net. admin.fdavidson.net. (
+    1
+    43200
+    7200
+    2419200
+    86400
+)
+
+; NS records
+@         IN        NS        dns01.fdavidson.net.
+
+; PTR records
+10        IN        PTR        vcenter01.fdavidson.net.

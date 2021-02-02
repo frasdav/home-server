@@ -1,0 +1,48 @@
+---
+apiVersion: elasticsearch.k8s.elastic.co/v1
+kind: Elasticsearch
+metadata:
+  name: elasticsearch
+  labels:
+    app: {{ .Chart.Name }}
+    version: {{ .Chart.Version }}
+spec:
+  version: {{ .Chart.AppVersion }}
+  http:
+    service:
+      spec:
+        type: LoadBalancer
+        loadBalancerIP: {{ .Values.loadBalancerIp }}
+    tls:
+      certificate:
+        secretName: elasticsearch-es-certs
+  nodeSets:
+    - name: default
+      count: 3
+      config:
+        node.data: true
+        node.ingest: true
+        node.master: true
+        node.ml: false
+        xpack.monitoring.collection.enabled: true
+      podTemplate:
+        spec:
+          initContainers:
+            - name: sysctl
+              securityContext:
+                privileged: true
+              command: ["sh", "-c", "sysctl -w vm.max_map_count=262144"]
+          containers:
+            - name: elasticsearch
+              securityContext:
+                capabilities:
+                  add: ["SYS_CHROOT"]
+      volumeClaimTemplates:
+        - metadata:
+            name: elasticsearch-data
+          spec:
+            accessModes:
+              - ReadWriteOnce
+            resources:
+              requests:
+                storage: 25Gi

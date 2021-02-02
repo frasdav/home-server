@@ -1,54 +1,62 @@
 const Ansible = require('node-ansible');
 const path = require('path');
 const Terrajs = require('@cda0/terrajs');
-const YAML = require('yamljs');
+const YAML = require('yaml');
 
-const {
-  domain,
-  kubeWorkerCount,
-  networkCidr,
-  networkDefaultGateway,
-  networkDnsServers,
-  vcenterPassword,
-  vcenterServer,
-  vcenterUsername,
-} = require('../shared/constants');
+const { getConfig } = require('../shared/config');
 const {
   readFile,
   writeFile,
 } = require('../shared/fs');
 const logger = require('../shared/logger');
 
+const {
+  configFilePath,
+} = require('../shared/constants');
+
 const deploy = async () => {
+  const config = await getConfig(configFilePath);
+
   const terraform = new Terrajs({ terraformDir: path.join(__dirname, 'terraform') });
 
   logger.info('Initialising Terraform');
   await terraform.init();
 
-  logger.info('Planning infrastructure changes');
+  logger.info('Planning Terraform changes');
   await terraform.plan({
     out: 'terraform.tfplan',
     var: {
-      domain,
-      kubeWorkerCount,
-      networkCidr,
-      networkDefaultGateway,
-      // networkDnsServers,
-      vcenterPassword,
-      vcenterServer,
-      vcenterUsername,
+      domain: config.domain,
+      kube_worker_count: config.kube_worker_count,
+      network_cidr: config.network_cidr,
+      network_default_gateway: config.network_default_gateway,
+      network_dns_servers: config.network_dns_servers,
+      vcenter_datacenter: config.vcenter_datacenter,
+      vcenter_datastore: config.vcenter_datastore,
+      vcenter_network: config.vcenter_network,
+      vcenter_password: config.vcenter_password,
+      vcenter_server: config.vcenter_server,
+      vcenter_username: config.vcenter_username,
+      vsphere_host: config.vsphere_host,
     },
   });
 
-  logger.info('Applying infrastructure changes');
+  logger.info('Applying Terraform changes');
   await terraform.apply({
     plan: 'terraform.tfplan',
   });
 
-  const output = JSON.parse(await terraform.output({
-    json: true,
-  }));
+  logger.info('Getting Terraform output');
+  const output = JSON.parse(await terraform.output(
+    {
+      json: true,
+    },
+    {
+      silent: true,
+    },
+  ));
 
+  logger.info('Generating Ansible inventory');
   const emptyAnsibleInventoryData = await readFile(path.join(__dirname, 'ansible', 'hosts.empty.yml'));
   const ansibleInventory = YAML.parse(emptyAnsibleInventoryData.toString());
   ansibleInventory.all.children.kube_master.hosts = {};
@@ -61,9 +69,18 @@ const deploy = async () => {
       ansible_host: h.default_ip_address,
     };
   });
-  await writeFile(path.join(__dirname, 'ansible', 'hosts.yml'), YAML.stringify(ansibleInventory, 6, 2));
+  ansibleInventory.all.vars = {
+    vcenter_datacenter: config.vcenter_datacenter,
+    vcenter_datastore: config.vcenter_datastore,
+    vcenter_network: config.vcenter_network,
+    vcenter_password: config.vcenter_password,
+    vcenter_server: config.vcenter_server,
+    vcenter_storage_policy: config.vcenter_storage_policy,
+    vcenter_username: config.vcenter_username,
+  };
+  await writeFile(path.join(__dirname, 'ansible', 'hosts.yml'), YAML.stringify(ansibleInventory));
 
-  logger.info('Executing Ansible');
+  logger.info('Executing Ansible playbook');
   const playbook = new Ansible.Playbook().playbook('site').inventory('hosts.yml').user('ubuntu');
   playbook.on('stdout', (data) => { logger.info(data.toString()); });
   playbook.on('stderr', (data) => { logger.error(data.toString()); });

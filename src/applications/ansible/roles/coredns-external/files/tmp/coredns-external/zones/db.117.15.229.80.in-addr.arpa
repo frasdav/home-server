@@ -1,0 +1,18 @@
+;
+; BIND reverse data file for 80.229.15.117
+;
+$TTL 86400
+@   IN    SOA    dns01.fdavidson.net. admin.fdavidson.net. (
+    1
+    43200
+    7200
+    2419200
+    86400
+)
+
+; NS records
+@        IN        NS        dns01.fdavidson.net.
+@        IN        NS        c.ns.buddyns.com.
+
+; PTR records
+@        IN        PTR        dns01.fdavidson.net.

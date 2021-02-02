@@ -1,18 +1,9 @@
-- name: Create Docker unit file directory
-  file:
-    path: /etc/systemd/system/docker.service.d
-    mode: 0755
-    owner: root
-    group: root
-    state: directory
-  become: yes
-
 - name: Copy daemon.json file
   copy:
     src: "{{ role_path }}/files/etc/docker/daemon.json"
     dest: /etc/docker/daemon.json
-    mode: 0644
+    mode: "0644"
     owner: root
     group: root
-  notify: Reload Docker
+  notify: Reload service
   become: yes

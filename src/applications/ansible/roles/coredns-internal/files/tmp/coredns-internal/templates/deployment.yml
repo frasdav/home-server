@@ -1,0 +1,82 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: coredns-internal
+  labels:
+    app: {{ .Chart.Name }}
+    version: {{ .Chart.Version }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Chart.Name }}
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: {{ .Chart.Name }}
+        version: {{ .Chart.Version }}
+      annotations:
+        checksum.config: {{ include (print $.Template.BasePath "/configmap.yml") . | sha256sum | trunc 63 }}
+    spec:
+      containers:
+        - name: coredns-internal
+          image: coredns/coredns:{{ .Chart.AppVersion }}
+          args: [ "-conf", "/etc/coredns/Corefile" ]
+          ports:
+            - containerPort: 53
+              name: dns-tcp
+              protocol: TCP
+            - containerPort: 53
+              name: dns-udp
+              protocol: UDP
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 60
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 5
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: 8181
+              scheme: HTTP
+            initialDelaySeconds: 10
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 5
+          volumeMounts:
+            - mountPath: /etc/coredns/Corefile
+              name: config
+              subPath: Corefile
+            {{- range $path, $data := .Files.Glob "zones/**" }}
+            - mountPath: /etc/coredns/{{ index ($path | splitList "/") 1 }}
+              name: zones
+              subPath: {{ index ($path | splitList "/") 1 }}
+            {{- end }}
+        - name: cloudflared
+          image: crazymax/cloudflared:latest
+          imagePullPolicy: Always
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          resources:
+            limits:
+              memory: 128Mi
+          ports:
+            - containerPort: 5053
+              name: cloudflared-udp
+              protocol: UDP
+      nodeSelector:
+        kubernetes.io/os: linux
+      volumes:
+        - name: config
+          configMap:
+            name: coredns-internal-config
+        - name: zones
+          configMap:
+            name: coredns-internal-zones
