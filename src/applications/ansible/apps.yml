@@ -7,3 +7,4 @@
     - couchbase-server
     - elasticsearch
     - kibana
+    - consul
