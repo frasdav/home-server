@@ -1,0 +1,71 @@
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: couchbase-elasticsearch-connector
+  labels:
+    app: {{ .Chart.Name }}
+    cbes-group: default
+    version: {{ .Chart.Version }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Chart.Name }}
+      cbes-group: default
+  serviceName: couchbase-elasticsearch-connector
+  replicas: 1
+  podManagementPolicy: Parallel
+  template:
+    metadata:
+      labels:
+        app: {{ .Chart.Name }}
+        cbes-group: default
+        version: {{ .Chart.Version }}
+    spec:
+      containers:
+        - name: connector
+          image: airheadedu.azurecr.io/couchbase/couchbase-elasticsearch-connector:{{ .Chart.AppVersion }}
+          imagePullPolicy: IfNotPresent
+          resources:
+            limits:
+              cpu: "4"
+              memory: "8Gi"
+            requests:
+              cpu: "2"
+              memory: "4Gi"
+          env:
+            - name: CBES_GROUP
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.labels['cbes-group']
+            - name: CBES_TOTALMEMBERS
+              value: "1"
+          command:
+            - /bin/bash
+            - -c
+            - export CBES_MEMBERNUMBER=$((${HOSTNAME##*-} + 1)) && cat /opt/couchbase-elasticsearch-connector/config/truststore.jks.b64 | base64 -d > /tmp/truststore.jks && cbes
+          livenessProbe:
+            httpGet:
+              path: /metrics
+              port: 31415
+            timeoutSeconds: 10
+            initialDelaySeconds: 30
+            periodSeconds: 30
+            successThreshold: 1
+            failureThreshold: 2
+          volumeMounts:
+            - mountPath: /opt/couchbase-elasticsearch-connector/config
+              name: config
+              readOnly: true
+            - mountPath: /opt/couchbase-elasticsearch-connector/secrets
+              name: secrets
+              readOnly: true
+      imagePullSecrets:
+        - name: acr-pull-secret
+      volumes:
+        - name: config
+          configMap:
+            name: couchbase-elasticsearch-connector-configuration
+        - name: secrets
+          secret:
+            secretName: couchbase-elasticsearch-connector-secrets
