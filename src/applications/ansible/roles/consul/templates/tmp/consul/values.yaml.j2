@@ -1,0 +1,9 @@
+global:
+  datacenter: {{ datacenter_name }}
+client:
+  exposeGossipPorts: true
+server:
+  exposeGossipAndRPCPorts: true
+  ports:
+    serflan:
+      port: 9301
