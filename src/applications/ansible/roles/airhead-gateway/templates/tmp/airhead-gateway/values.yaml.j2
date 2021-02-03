@@ -1,0 +1,7 @@
+certificate:
+  crt: |
+    {{ certificate.crt | indent(4, False) }}
+  key: |
+    {{ certificate.key | indent(4, False) }}
+rootDomain: {{ root_domain }}
+rootDomainRegex: {{ root_domain_regex }}

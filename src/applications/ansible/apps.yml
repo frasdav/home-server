@@ -8,3 +8,4 @@
     - elasticsearch
     - kibana
     - consul
+    - airhead-gateway
