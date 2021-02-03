@@ -1,0 +1,54 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Chart.Name }}
+  labels:
+    app: {{ .Chart.Name }}
+    version: {{ .Chart.Version }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Chart.Name }}
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: {{ .Chart.Name }}
+        version: {{ .Chart.Version }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: airheadedu.azurecr.io/{{ .Chart.Name }}:{{ .Chart.AppVersion }}
+          env:
+            - name: CONSUL_ADDR
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+            - name: ROOT_DOMAIN
+              value: {{ .Values.rootDomain }}
+            - name: ROOT_DOMAIN_REGEX
+              value: {{ .Values.rootDomainRegex }}
+          ports:
+            - name: http
+              containerPort: 80
+            - name: https
+              containerPort: 443
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+          volumeMounts:
+            - name: certificate-volume
+              readOnly: true
+              mountPath: /certificate
+      imagePullSecrets:
+        - name: acr-pull-secret
+      volumes:
+        - name: certificate-volume
+          secret:
+            secretName: "{{ .Chart.Name }}-certificate"
