@@ -28,7 +28,7 @@
   "homepage": "https://github.com/frasdav/home-server#readme",
   "dependencies": {
     "@cda0/terrajs": "^0.4.0",
-    "got": "^11.1.4",
+    "got": "^11.8.5",
     "node-ansible": "^0.5.5",
     "shelljs": "^0.8.4",
     "winston": "^3.2.1",
